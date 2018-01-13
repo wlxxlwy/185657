@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://www.cnblogs.com/liujie037/p/5790698.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/bundle-AnotherEon001.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/bundle-AnotherEon001-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/liujie037/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/liujie037/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/liujie037/wlwmanifest.xml">
+<script async="" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/encoder.js"></script><script src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'liujie037', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/liujie037/">liujie037</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div id="blog_stats">
+<div class="BlogStats">随笔 - 40, 文章 - 9, 评论 - 2, 引用 - 0</div>
+</div></div>
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/liujie037/p/5790698.html">Activiti工作流学习-----基于5.19.0版本(4)</a>
+		</h2>
+		<div class="postbody">
+		<div id="cnblogs_post_body" class="blogpost-body"><h3>四、使用工作流开发</h3>
+<p>&nbsp;org.activiti.engine.ProcessEngine提供的Service作用在工作流引擎上面，如果所示是模仿一个公司简单的审批流程，你可以下载这个Demo:<a href="https://github.com/Activiti/activiti-unit-test-template">Activiti unit test template</a>玩玩。</p>
+<p><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/672697-20160820130403765-359747089.png" alt=""></p>
+<p>发布这个流程图可以通过<strong>RepositoryService</strong>进行，在数据库中存储的这些静态数据是这些：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre deep="9"><span style="color: #0000ff;">&lt;?</span><span style="color: #ff00ff;">xml version="1.0" encoding="UTF-8"</span><span style="color: #0000ff;">?&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">definitions </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.omg.org/spec/BPMN/20100524/MODEL"</span><span style="color: #ff0000;"> xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;"> xmlns:xsd</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema"</span><span style="color: #ff0000;"> xmlns:activiti</span><span style="color: #0000ff;">="http://activiti.org/bpmn"</span><span style="color: #ff0000;"> xmlns:bpmndi</span><span style="color: #0000ff;">="http://www.omg.org/spec/BPMN/20100524/DI"</span><span style="color: #ff0000;"> xmlns:omgdc</span><span style="color: #0000ff;">="http://www.omg.org/spec/DD/20100524/DC"</span><span style="color: #ff0000;"> xmlns:omgdi</span><span style="color: #0000ff;">="http://www.omg.org/spec/DD/20100524/DI"</span><span style="color: #ff0000;"> typeLanguage</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema"</span><span style="color: #ff0000;"> expressionLanguage</span><span style="color: #0000ff;">="http://www.w3.org/1999/XPath"</span><span style="color: #ff0000;"> targetNamespace</span><span style="color: #0000ff;">="http://activiti.org/bpmn20"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="definitions"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">process </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="vacationRequest"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Vacation request"</span><span style="color: #ff0000;"> isExecutable</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">startEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="request"</span><span style="color: #ff0000;"> activiti:initiator</span><span style="color: #0000ff;">="employeeName"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="numberOfDays"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Number of days"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="long"</span><span style="color: #ff0000;"> required</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="startDate"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="First day of holiday (dd-MM-yyy)"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="date"</span><span style="color: #ff0000;"> datePattern</span><span style="color: #0000ff;">="dd-MM-yyyy hh:mm"</span><span style="color: #ff0000;"> required</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="vacationMotivation"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Motivation"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="string"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">startEvent</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow1"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="request"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="handleRequest"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">userTask </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="handleRequest"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="处理休假单"</span><span style="color: #ff0000;"> activiti:candidateGroups</span><span style="color: #0000ff;">="management"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">documentation</span><span style="color: #0000ff;">&gt;</span>${employeeName} would like to take ${numberOfDays} day(s) of vacation (Motivation: ${vacationMotivation}).<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">documentation</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="vacationApproved"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Do you approve this vacation"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="enum"</span><span style="color: #ff0000;"> required</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:value </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Approve"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:value</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:value </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="false"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Reject"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:value</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="managerMotivation"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Motivation"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="string"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">userTask</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow2"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="handleRequest"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="requestApprovedDecision"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">exclusiveGateway </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="requestApprovedDecision"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Request approved?"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">exclusiveGateway</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow3"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="同意"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="requestApprovedDecision"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="sendApprovalMail"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">conditionExpression </span><span style="color: #ff0000;">xsi:type</span><span style="color: #0000ff;">="tFormalExpression"</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">[CDATA[${vacationApproved == 'true'}]]</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">conditionExpression</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">manualTask </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="sendApprovalMail"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="发送邮件"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">manualTask</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow4"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="sendApprovalMail"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="theEnd1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">endEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="theEnd1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">endEvent</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow5"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="不同意"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="requestApprovedDecision"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="adjustVacationRequestTask"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">conditionExpression </span><span style="color: #ff0000;">xsi:type</span><span style="color: #0000ff;">="tFormalExpression"</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">[CDATA[${vacationApproved == 'false'}]]</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">conditionExpression</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">userTask </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="adjustVacationRequestTask"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="修改休假单"</span><span style="color: #ff0000;"> activiti:assignee</span><span style="color: #0000ff;">="${employeeName}"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">documentation</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Your manager has disapproved your vacation request for ${numberOfDays} days.
+        Reason: ${managerMotivation}</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">documentation</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="numberOfDays"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Number of days"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="long"</span><span style="color: #ff0000;"> required</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="startDate"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="First day of holiday (dd-MM-yyy)"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="date"</span><span style="color: #ff0000;"> datePattern</span><span style="color: #0000ff;">="dd-MM-yyyy hh:mm"</span><span style="color: #ff0000;"> required</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="vacationMotivation"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Motivation"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="string"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:formProperty </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="resendRequest"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Resend vacation request to manager?"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="enum"</span><span style="color: #ff0000;"> required</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:value </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Yes"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:value</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:value </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="false"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="No"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">activiti:value</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">activiti:formProperty</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">userTask</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow6"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="adjustVacationRequestTask"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="resendRequestDecision"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">exclusiveGateway </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="resendRequestDecision"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Resend request?"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">exclusiveGateway</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow7"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="重新请求处理"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="resendRequestDecision"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="handleRequest"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">conditionExpression </span><span style="color: #ff0000;">xsi:type</span><span style="color: #0000ff;">="tFormalExpression"</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">[CDATA[${resendRequest == 'true'}]]</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">conditionExpression</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">sequenceFlow </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="flow8"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="放弃休假"</span><span style="color: #ff0000;"> sourceRef</span><span style="color: #0000ff;">="resendRequestDecision"</span><span style="color: #ff0000;"> targetRef</span><span style="color: #0000ff;">="theEnd2"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">conditionExpression </span><span style="color: #ff0000;">xsi:type</span><span style="color: #0000ff;">="tFormalExpression"</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">[CDATA[${resendRequest == 'false'}]]</span><span style="color: #0000ff;">&gt;</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">conditionExpression</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">sequenceFlow</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">endEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="theEnd2"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">endEvent</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">process</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNDiagram </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="BPMNDiagram_vacationRequest"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNPlane </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="vacationRequest"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNPlane_vacationRequest"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="request"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_request"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="35.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="35.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="1.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="61.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="handleRequest"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_handleRequest"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="60.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="102.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="49.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="requestApprovedDecision"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_requestApprovedDecision"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="40.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="40.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="237.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="58.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="sendApprovalMail"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_sendApprovalMail"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="60.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="391.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="49.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="theEnd1"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_theEnd1"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="35.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="35.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="641.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="61.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="adjustVacationRequestTask"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_adjustVacationRequestTask"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="60.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="391.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="165.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="resendRequestDecision"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_resendRequestDecision"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="40.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="40.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="541.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="174.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNShape </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="theEnd2"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNShape_theEnd2"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="35.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="35.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="641.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="177.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNShape</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow1"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow1"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="36.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="78.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="102.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="79.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow2"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow2"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="202.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="79.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="237.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="78.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow3"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow3"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="277.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="78.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="320.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="77.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="391.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="79.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="14.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="277.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="78.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow4"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow4"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="491.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="79.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="523.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="78.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="641.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="78.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow5"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow5"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="257.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="98.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="257.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="190.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="303.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="190.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="391.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="195.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="14.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="261.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="151.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow6"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow6"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="491.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="195.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="541.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="194.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow7"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow7"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="561.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="214.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="561.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="329.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="149.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="329.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="152.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="109.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="14.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="321.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="309.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNEdge </span><span style="color: #ff0000;">bpmnElement</span><span style="color: #0000ff;">="flow8"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="BPMNEdge_flow8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="581.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="194.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdi:waypoint </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="641.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="194.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdi:waypoint</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">omgdc:Bounds </span><span style="color: #ff0000;">height</span><span style="color: #0000ff;">="14.0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100.0"</span><span style="color: #ff0000;"> x</span><span style="color: #0000ff;">="581.0"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="194.0"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">omgdc:Bounds</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNLabel</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNEdge</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNPlane</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bpmndi:BPMNDiagram</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">definitions</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>工作流引擎将会将xml转化成可执行的java对象和数据库记录，即使重启，工作流引擎仍然知道这些数据。发布可以这样书写：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>ProcessEngine processEngine =<span style="color: #000000;"> ProcessEngines.getDefaultProcessEngine();
+RepositoryService repositoryService </span>=<span style="color: #000000;"> processEngine.getRepositoryService();<br>//加载xml流程定义文件
+repositoryService.createDeployment()
+  .addClasspathResource(</span>"org/activiti/test/VacationRequest.bpmn20.xml"<span style="color: #000000;">)
+  .deploy();
+
+Log.info(</span>"Number of process definitions: " + repositoryService.createProcessDefinitionQuery().count());</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>4.1 启动流程实例</h3>
+<p>&nbsp;在成功发布流程定义到工作流引擎后，我们可以启动一个新的流程实例。流程定义和流程实例是一对多的关系，是一静一动的关系。使用<strong>RuntimeService</strong>可以操作相关的流程，有很多方式启动流程实例，在下面的代码中，我们使用了在流程定义的key来启动它，同时我们在启动过程中也添加了流程变量在流程实例中，流程变量大到整个流程实例的作用范围，小到局部任务节点，流程实例具有的流程变量也是和其他流程变量之间区分的差别。流程变量是一个典型的Map结构：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> Map&lt;String, Object&gt; variables = <span style="color: #0000ff;">new</span> HashMap&lt;String, Object&gt;<span style="color: #000000;">();
+</span><span style="color: #008080;"> 2</span> variables.put("employeeName", "Kermit"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 3</span> variables.put("numberOfDays", <span style="color: #0000ff;">new</span> Integer(4<span style="color: #000000;">));
+</span><span style="color: #008080;"> 4</span> variables.put("vacationMotivation", "I'm really tired!"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 5</span> 
+<span style="color: #008080;"> 6</span> RuntimeService runtimeService =<span style="color: #000000;"> processEngine.getRuntimeService();<br>　　//</span>vacationRequest是开发者在流程定义xml中事先定义好的。<br><br><span style="color: #008080;"> 7</span> ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("vacationRequest"<span>, variables); </span></pre>
+<pre><span style="color: #008080;"> 8</span> <span style="color: #008000;">//</span><span style="color: #008000;"> Verify that we started a new process instance</span> <br><span style="color: #008080;">9</span> Log.info("Number of process instances: " + runtimeService.createProcessInstanceQuery().count());</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>4.2 完成任务</h3>
+<p>在流程实例成功启动后，流程第一步会是一个用户的任务，他必须由用户手动完成，而任务的获取可以使用以下代码实现：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 查询一个叫management的用户组的组任务</span>
+TaskService taskService =<span style="color: #000000;"> processEngine.getTaskService();
+List</span>&lt;Task&gt; tasks = taskService.createTaskQuery().taskCandidateGroup("management"<span style="color: #000000;">).list();
+</span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Task task : tasks) {
+  Log.info(</span>"Task available: " +<span style="color: #000000;"> task.getName());
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>在查询出了任务后，流程实例需要继续开展往往需要我们完成这些任务，完成任务的代码：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>1 Task task = tasks.get(0<span style="color: #000000;">);
+</span>2 
+3 Map&lt;String, Object&gt; taskVariables = <span style="color: #0000ff;">new</span> HashMap&lt;String, Object&gt;<span style="color: #000000;">();
+</span>4 taskVariables.put("vacationApproved", "false"<span style="color: #000000;">);
+</span>5 taskVariables.put("managerMotivation", "We have a tight deadline!"<span style="color: #000000;">);
+</span>6 <span style="color: #008000;">//</span><span style="color: #008000;">调用complete方法完成任务</span>
+7 taskService.complete(task.getId(), taskVariables);</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>流程实例将会进入下一步，在例子代码中，我们将流程变量vacationApproved置为了false,也就是说审批不同意，根据流程图下一步是返回给请假者，请假者自己处理审批结果，</p>
+<p>请假者可以重新提交修改的请假单，流程将会循环进入流程图中的开始任务处。</p>
+<h3>4.3 流程暂停和激活</h3>
+<p>&nbsp;流程定义在流转中很可能被暂停，如果是流程定义被暂停了，那么流程实例将不能够被创建,同时工作流引擎将会抛出异常。大家可以使用下面代码进行实践，暂停流程定义后捕获异常：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> repositoryService.suspendProcessDefinitionByKey("vacationRequest"<span style="color: #000000;">);
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">3</span>   runtimeService.startProcessInstanceByKey("vacationRequest"<span style="color: #000000;">);
+</span><span style="color: #008080;">4</span> } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ActivitiException e) {
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">  e.printStackTrace();
+</span><span style="color: #008080;">6</span> }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>为了重新激活流程定义，调用方法repositoryService.activateProcessDefinitionXXX即可。</p>
+<p>也有可能流程实例被暂停了，在暂停的时候，流程不能继续开展(比如在完成任务抛出异常)，没有作业会执行，暂停一个流程实例调用RuntimeService的runtimeService.suspendProcessInstance方法，激活</p>
+<p>流程实例执行runtimeService.activateProcessInstanceXXX方法即可。有深入了解的同学可以去看我后期的博客，同时Activiti作为一个开源项目，大家也可以直接深入源码进行学习和查看官方的api文档。</p>
+<h3>&nbsp;4.4 工作流的查询</h3>
+<p>&nbsp;在工作流引擎中查询有两种方式：工作流的api查询和mybatis的sql查询，activiti的查询API设计非常优雅，你可以连续的加上不同的限制条件和排序条件(它们在逻辑上都是And形式)，例如下面这段代码：&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> List&lt;Task&gt; tasks =<span style="color: #000000;"> taskService.createTaskQuery()
+</span><span style="color: #008080;">2</span>     .taskAssignee("kermit"<span style="color: #000000;">)
+</span><span style="color: #008080;">3</span>     .processVariableValueEquals("orderId", "0815"<span style="color: #000000;">)
+</span><span style="color: #008080;">4</span> <span style="color: #000000;">    .orderByDueDate().asc()
+</span><span style="color: #008080;">5</span>     .list();</pre>
+</div>
+<p>有时候你需要更加强大的查询，比如OR条件查询以及其他无法使用API进行描述的查询。对于这些情况，activiti建议你使用原生的sql查询，查询对象(比如TaskQuery)已经定义了返回不同的对象，比如Task, ProcessInstance, Execution等，使用原生sql查询需要SQL知识和Activiti表结构知识(比如查询你至少知道表名是什么吧)，activiti帮我们做了很多，比如下面代码：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">拼装sql语句</span>
+List&lt;Task&gt; tasks =<span style="color: #000000;"> taskService.createNativeTaskQuery()
+  .sql(</span>"SELECT count(*) FROM " + managementService.getTableName(Task.<span style="color: #0000ff;">class</span>) + " T WHERE T.NAME_ = #{taskName}"<span style="color: #000000;">)
+  .parameter(</span>"taskName", "gonzoTask"<span style="color: #000000;">)
+  .list();
+
+</span><span style="color: #0000ff;">long</span> count =<span style="color: #000000;"> taskService.createNativeTaskQuery()
+  .sql(</span>"SELECT count(*) FROM " + managementService.getTableName(Task.<span style="color: #0000ff;">class</span>) + " T1, "
+    + managementService.getTableName(VariableInstanceEntity.<span style="color: #0000ff;">class</span>) + " V1 WHERE V1.TASK_ID_ = T1.ID_"<span style="color: #000000;">)
+  .count();</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>4.5 工作流中的变量</h3>
+<p>每一个流程实例在流程步骤中需要和使用变量。变量也会存储在数据库中，变量也能在表达式中使用(比如排他网关根据流程变量的取值决定流程的走向),在工作流之外其他的service提供服务调用后存储输入和输入结果。</p>
+<p>一个流程实例拥有的变量叫做流程变量，执行对象也能拥有变量，不过变量只有当前任务才能拥有，流程继续执行时就无法再次获取和存储上一次执行对象的变量。原则上流程变量数量是没有限制的，每一个变量都存储在表ACT_RU_VARIABLE中。</p>
+<p>所有的startProcessInstanceXXX方法都提供了变量传参的方法，比如：</p>
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_599256" class="syntaxhighlighter  java"><div class="toolbar"><span><a href="http://www.cnblogs.com/liujie037/p/5790698.html#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="java plain">ProcessInstance startProcessInstanceByKey(String processDefinitionKey, Map&lt;String, Object&gt; variables);</code></div></div></td></tr></tbody></table></div></div>
+</div>
+<p>　变量也可以在流程执行对象处添加，比如RuntimeService的API:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setVariable(String executionId, String variableName, Object value);
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setVariableLocal(String executionId, String variableName, Object value);
+</span><span style="color: #008080;">3</span> <span style="color: #0000ff;">void</span> setVariables(String executionId, Map&lt;String, ? <span style="color: #0000ff;">extends</span> Object&gt;<span style="color: #000000;"> variables);
+</span><span style="color: #008080;">4</span> <span style="color: #0000ff;">void</span> setVariablesLocal(String executionId, Map&lt;String, ? <span style="color: #0000ff;">extends</span> Object&gt; variables);</pre>
+</div>
+<p>在流程执行对象中设置的变量是局部变量(记住流程实例是由多个树形结构的执行对象组成)，局部变量仅仅是在对应的执行对象中可见，在我们不想让变量传播影响到流程实例这一层次的话，可以考虑使用局部变量，又比如在并行网关那里需要对一个变量赋予新值而不会影响另外其他流程执行的路径时也会考虑使用局部变量。</p>
+<p>在任务对象上对局部变量的存取的API如下所示：(调用TaskService)</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> Map&lt;String, Object&gt;<span style="color: #000000;"> getVariables(String executionId);
+</span><span style="color: #008080;">2</span> Map&lt;String, Object&gt;<span style="color: #000000;"> getVariablesLocal(String executionId);
+</span><span style="color: #008080;">3</span> Map&lt;String, Object&gt; getVariables(String executionId, Collection&lt;String&gt;<span style="color: #000000;"> variableNames);
+</span><span style="color: #008080;">4</span> Map&lt;String, Object&gt; getVariablesLocal(String executionId, Collection&lt;String&gt;<span style="color: #000000;"> variableNames);
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">Object getVariable(String executionId, String variableName);
+</span><span style="color: #008080;">6</span> &lt;T&gt; T getVariable(String executionId, String variableName, Class&lt;T&gt; variableClass);</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>变量经常被用在短语、表达式、执行对象或者任务，任务监听器、脚本等，譬如execution(执行对象)的API:</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> <span style="color: #000000;">execution.getVariables();
+</span><span style="color: #008080;">2</span> execution.getVariables(Collection&lt;String&gt;<span style="color: #000000;"> variableNames);
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">execution.getVariable(String variableName);
+</span><span style="color: #008080;">4</span> 
+<span style="color: #008080;">5</span> execution.setVariables(Map&lt;String, object&gt;<span style="color: #000000;"> variables);
+</span><span style="color: #008080;">6</span> execution.setVariable(String variableName, Object value);</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;由于历史版本原因，在执行任何上述方法的时候，activiti默认是将所有的变量从数据库取出来，意味着数据库存有10个变量，现在你需要取出名叫<em>myVariable</em>的变量，但是其余的9个也会被取出来并且缓存起来。这并不是很差，因为后期你取变量就不会再从数据库取出，当然如果你有大量的变量或者在查询方面你想进一步控制数据库，这时全部取出就不怎么合适了。从Activiti5.17版本开始，新添加了的方法支持是否全部查询：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> Map&lt;String, Object&gt; getVariables(Collection&lt;String&gt; variableNames, <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> fetchAllVariables);
+</span><span style="color: #008080;">2</span> Object getVariable(String variableName, <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> fetchAllVariables);
+</span><span style="color: #008080;">3</span> <span style="color: #0000ff;">void</span> setVariable(String variableName, Object value, <span style="color: #0000ff;">boolean</span> fetchAllVariables);</pre>
+</div>
+<h3>4.6 表达式</h3>
+<p>&nbsp;目前工作流使用的表达式语言是UEL,所谓的UEL就是<em>Unified Expression Language，</em>他是javaee6的规范之一，为了让最新的UEL的所有特性都用在activiti环境中，我们使用了JUEL的修改版。</p>
+<p>表达式有两种：值表达式(value-expression)和方法表达式(method-expression), 在表达式需要的地方，两种表达式都可以使用。</p>
+<ul>
+<li><strong>Value expression</strong>: 用法和Spring环境相同，所有可以从Spring中读取值。</li>
+</ul>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">${myVar}
+${myBean.myProperty}</span></pre>
+</div>
+<ul>
+<li><strong>method-expression：</strong>执行指定的方法，参数可有可无。activiti依靠圆括号()区别表达式是method-expression,例如：</li>
+</ul>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">${printer.print()}
+${myBean.addNewOrder('orderName')}
+${myBean.doSomething(myVar, execution)}</span></pre>
+</div>
+<p>&nbsp;表达式支持对象是beans, lists, arrays and maps.</p>
+<p>在流程变量中，activiti已经定义了下面变量名，它们已经被使用:</p>
+<ul>
+<li>execution:它含有当前正在执行的执行对象的信息。</li>
+<li>task:它含有当前任务的信息。</li>
+<li>authenticatedUserId：当前被验证的用户ID,如果没有用户被验证，当前值为空。</li>
+</ul>
+<h3>4.7 工作流的单元测试与技巧</h3>
+<p>业务流程是软件工程中不可或缺的一部分，其中的逻辑应该被测试到。自从activiti能够嵌入Java应用中后，为业务流程书写单元测试变得平常简单了。Activiti支持Junit3和Junit4的测试风格，在junit3中，org.activiti.engine.test.ActivitiTestCase需要被继承。ActivitiTestCase中protected的方法能够创建流程引擎和相关的Services,默认的，创建的流程引擎会从类路径下面加载activiti.cfg.xml，为了更加灵活的加载，你需要重写方法：<em>getConfigurationResource()。</em>在多个测试单元测试中如果读取的配置文件相同，流程引擎会被缓存起来。通过继承，你可以使用注解@Deployment在方法上面，在执行单元测试方法前，会将该测试类同一目录的testClassName.testMethod.bpmn20.xml文件加载和发布，在测试方法结束时候将会删除流程实例，任务等，而且@Deployment也支持自定义加载文件，可以查看源代码分析，这里就不赘述了。</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyBusinessProcessTest <span style="color: #0000ff;">extends</span><span style="color: #000000;"> ActivitiTestCase {
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #000000;">  @Deployment
+</span><span style="color: #008080;"> 4</span>   <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> testSimpleProcess() {
+</span><span style="color: #008080;"> 5</span>     runtimeService.startProcessInstanceByKey("simpleProcess"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span> 
+<span style="color: #008080;"> 7</span>     Task task =<span style="color: #000000;"> taskService.createTaskQuery().singleResult();
+</span><span style="color: #008080;"> 8</span>     assertEquals("My Task"<span style="color: #000000;">, task.getName());
+</span><span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #000000;">    taskService.complete(task.getId());
+</span><span style="color: #008080;">11</span>     assertEquals(0<span style="color: #000000;">, runtimeService.createProcessInstanceQuery().count());
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">  }
+</span><span style="color: #008080;">13</span> }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>在Junit4中也有同样的功能，必须使用类org.activiti.engine.test.ActivitiRule，通过该类的get方法我们可以获取Service和流程实例。使用@Rule注解可以调用到org.activiti.engine.test.Deployment的功能，不过它加载xml文件是在类路径下面，例如下面junit4的测试代码：</p>
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_122020" class="syntaxhighlighter  java"><div class="toolbar"><span><a href="http://www.cnblogs.com/liujie037/p/5790698.html#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="java keyword">public</code> <code class="java keyword">class</code> <code class="java plain">MyBusinessProcessTest {</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="java spaces">&nbsp;&nbsp;</code><code class="java color1">@Rule</code></div><div class="line number4 index3 alt1"><code class="java spaces">&nbsp;&nbsp;</code><code class="java keyword">public</code> <code class="java plain">ActivitiRule activitiRule = </code><code class="java keyword">new</code> <code class="java plain">ActivitiRule();</code></div><div class="line number5 index4 alt2">&nbsp;</div><div class="line number6 index5 alt1"><code class="java spaces">&nbsp;&nbsp;</code><code class="java color1">@Test</code></div><div class="line number7 index6 alt2"><code class="java spaces">&nbsp;&nbsp;</code><code class="java color1">@Deployment</code></div><div class="line number8 index7 alt1"><code class="java spaces">&nbsp;&nbsp;</code><code class="java keyword">public</code> <code class="java keyword">void</code> <code class="java plain">ruleUsageExample() {</code></div><div class="line number9 index8 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">RuntimeService runtimeService = activitiRule.getRuntimeService();</code></div><div class="line number10 index9 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">runtimeService.startProcessInstanceByKey(</code><code class="java string">"ruleUsage"</code><code class="java plain">);</code></div><div class="line number11 index10 alt2">&nbsp;</div><div class="line number12 index11 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">TaskService taskService = activitiRule.getTaskService();</code></div><div class="line number13 index12 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">Task task = taskService.createTaskQuery().singleResult();</code></div><div class="line number14 index13 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">assertEquals(</code><code class="java string">"My Task"</code><code class="java plain">, task.getName());</code></div><div class="line number15 index14 alt2">&nbsp;</div><div class="line number16 index15 alt1"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">taskService.complete(task.getId());</code></div><div class="line number17 index16 alt2"><code class="java spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="java plain">assertEquals(</code><code class="java value">0</code><code class="java plain">, runtimeService.createProcessInstanceQuery().count());</code></div><div class="line number18 index17 alt1"><code class="java spaces">&nbsp;&nbsp;</code><code class="java plain">}</code></div><div class="line number19 index18 alt2"><code class="java plain">}</code></div></div></td></tr></tbody></table></div></div>
+</div>
+<h3>4.8 工作流在web应用中使用</h3>
+<p>流程引擎是线程安全类，可以被多个线程单独使用，在web环境中意味着流程引擎需要在项目启动而创建流程引擎，在项目关闭而关闭流程引擎。下面的代码简单的创建了ServletContextListener 来初始化流程引擎和销毁。</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> ProcessEnginesServletContextListener <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ServletContextListener {
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> contextInitialized(ServletContextEvent servletContextEvent) {
+    ProcessEngines.init();
+  }
+
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> contextDestroyed(ServletContextEvent servletContextEvent) {
+    ProcessEngines.destroy();
+  }
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<address class="cnblogs_code">&nbsp;</address></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/liujie037/category/689421.html" target="_blank">javaweb学习笔记</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/liujie037/tag/java/">java</a>, <a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>, <a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5790698,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" href="javascript:void(0);">已关注</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/" target="_blank"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/">liujie037</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followees">关注 - 2</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followers">粉丝 - 9</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                我在关注他 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;);return false;">取消关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5790698,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(5790698,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/liujie037/p/5783665.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/liujie037/p/5783665.html" title="发布于2016-08-20 11:39">Activiti工作流学习-----基于5.19.0版本(3)</a><br><a href="http://www.cnblogs.com/liujie037/p/5792658.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/liujie037/p/5792658.html" title="发布于2016-08-21 23:11">Activiti工作流学习-----基于5.19.0版本(5)</a><br></div>
+</div>
+
+
+		</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2016-08-21 02:00</span> <a href="http://www.cnblogs.com/liujie037/">liujie037</a> 阅读(<span id="post_view_count">2909</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5790698" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/liujie037/p/5790698.html#" onclick="AddToWz(5790698);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=198104,cb_entryId=5790698,cb_blogApp=currentBlogApp,cb_blogUserGuid='da0d9364-ae3c-e411-b908-9dcfd8948a71',cb_entryCreatedDate='2016/8/21 2:00:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/liujie037/p/5790698.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/liujie037/p/5790698.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="射禾木">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】超50万VC++源码: 大型工控、组态\仿真、建模CAD源码2018！</a><br><a href="https://cloud.tencent.com/developer/support-plan?fromSource=gwzcw.710852.710852.710852" target="_blank">【推荐】加入腾讯云自媒体扶持计划，免费领取域名&amp;服务器</a><br><a href="https://group.cnblogs.com/topic/78343.html" target="_blank">【福利】限时领取，H3 BPM给你发年终奖</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.h3bpm.net/" target="_blank"><img width="300" height="250" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/24442-20171226125601900-422637433.jpg" alt="h3bpm 活动"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/586625/" target="_blank">英媒：腾讯有意向缅甸社交网站MySquar投资</a><br> ·  <a href="https://news.cnblogs.com/n/586628/" target="_blank">构筑“掩体” 携程推动同程艺龙合并</a><br> ·  <a href="https://news.cnblogs.com/n/586624/" target="_blank">ofo“撕开”出海突破口：中国企业全球化新样本</a><br> ·  <a href="https://news.cnblogs.com/n/586626/" target="_blank">空降兵连续离职，战略再次动荡，迷茫的联想移动何时能找到方向？</a><br> ·  <a href="https://news.cnblogs.com/n/586629/" target="_blank">Intel/AMD合体CPU性能曝光：图形比GTX 1060快13%</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/34770/" target="_blank"><img width="468" height="60" src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/24442-20171208101900738-116140477.jpg" alt="阿里云C2-1208"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/585502/" target="_blank">步入云计算</a><br> ·  <a href="http://kb.cnblogs.com/page/531409/" target="_blank">以操作系统的角度述说线程与进程</a><br> ·  <a href="http://kb.cnblogs.com/page/141729/" target="_blank">软件测试转型之路</a><br> ·  <a href="http://kb.cnblogs.com/page/177402/" target="_blank">门内门外看招聘</a><br> ·  <a href="http://kb.cnblogs.com/page/112506/" target="_blank">大道至简，职场上做人做事做管理</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+<li>
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+<li>
+<a id="blog_nav_myhome" class="two_words" href="http://www.cnblogs.com/liujie037/">首页</a></li>
+<li>
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li>
+<a id="blog_nav_contact" accesskey="9" class="two_words" rel="nofollow" href="https://msg.cnblogs.com/send/liujie037">联系</a></li>
+<li>
+<a id="blog_nav_rss" class="two_words" href="http://www.cnblogs.com/liujie037/rss">订阅</a>
+<a id="blog_nav_rss_image" href="http://www.cnblogs.com/liujie037/rss"><img src="./Activiti工作流学习-----基于5.19.0版本(4) - liujie037 - 博客园_files/xml.gif" alt="订阅"></a>
+</li>
+<li>
+<a id="blog_nav_admin" class="two_words" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/12/01&#39;);return false;">&lt;</a></td><td align="center">2018年1月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/02/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td class="CalWeekendDay" align="center">6</td></tr><tr><td class="CalTodayDay" align="center">7</td><td align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td class="CalWeekendDay" align="center">13</td></tr><tr><td class="CalWeekendDay" align="center">14</td><td align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td class="CalWeekendDay" align="center">20</td></tr><tr><td class="CalWeekendDay" align="center">21</td><td align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td class="CalWeekendDay" align="center">27</td></tr><tr><td class="CalWeekendDay" align="center">28</td><td align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td></tr><tr><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td><td class="CalOtherMonthDay" align="center">9</td><td class="CalOtherMonthDay" align="center">10</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+<meta name="vs_showGrid" content="False">
+
+<h3>公告</h3>
+<div id="blog-news"><div id="profile_block">昵称：<a href="https://home.cnblogs.com/u/liujie037/">liujie037</a><br>园龄：<a href="https://home.cnblogs.com/u/liujie037/" title="入园时间：2014-09-15">3年3个月</a><br>粉丝：<a href="https://home.cnblogs.com/u/liujie037/followers/">9</a><br>关注：<a href="https://home.cnblogs.com/u/liujie037/followees/">2</a><div id="p_b_follow">已关注 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;)">-取消</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+
+<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/liujie037/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/liujie037/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/liujie037/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/liujie037/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<h3 class="catListTitle">我的标签</h3>
+<div id="MyTag">
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/tag/java/">java</a>(10)</li><li><a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/JasperReport%20%20iReport%20%20%20PDF%20%20%20jasper%20%20jrxml/">JasperReport  iReport   PDF   jasper  jrxml</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/%E8%BF%90%E7%AE%97%E7%AC%A6/">运算符</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/mysql/">mysql</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/pdf/">pdf</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/POI/">POI</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/python%E7%9A%84%E4%BB%8B%E7%BB%8D/">python的介绍</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/Servlet/">Servlet</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/liujie037/category/689411.html">c语言学习笔记(17)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/liujie037/category/791015.html">javaWeb服务器笔记(1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/liujie037/category/689421.html">javaweb学习笔记(8)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/liujie037/category/689420.html">java基础学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/liujie037/category/689422.html">SSH学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/liujie037/category/689423.html">数据库学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/liujie037/category/739422.html">图表学习笔记(5)</a></li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/liujie037/archive/2016/09.html">2016年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/liujie037/archive/2016/08.html">2016年8月 (7)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/liujie037/archive/2016/06.html">2016年6月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/liujie037/archive/2016/02.html">2016年2月 (5)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/liujie037/archive/2015/09.html">2015年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/liujie037/archive/2015/05.html">2015年5月 (19)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/liujie037/archive/2015/03.html">2015年3月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/liujie037/archive/2014/11.html">2014年11月 (3)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/liujie037/archive/2014/09.html">2014年9月 (2)</a></li>
+			
+				</ul>
+			
+	
+		<h3>文章分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_2_Link_0" href="http://www.cnblogs.com/liujie037/category/627940.html">XML学习笔记</a></li>
+			
+				</ul>
+			
+	</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/5799905.html#3496776">1. Re:Activiti工作流学习-----基于5.19.0版本(7)</a></li>
+        <li class="recent_comment_body">mark。</li>
+        <li class="recent_comment_author">--muki</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/4496910.html#3221683">2. Re:第一个C语言程序</a></li>
+        <li class="recent_comment_body">像早上的味道。</li>
+        <li class="recent_comment_author">--_Zhuqy</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">1. Activiti工作流学习-----基于5.19.0版本(7)(3291)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/4842512.html">2. 使用POI插件，提取导出excel的工具类(3208)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5790698.html">3. Activiti工作流学习-----基于5.19.0版本(4)(2909)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5176486.html">4. 利用程序将.jrxml导出为.jasper文件并用PDF显示(2)(2030)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5778514.html">5. Activiti工作流学习-----基于5.19.0版本(2)(1733)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/4496910.html">1. 第一个C语言程序(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">2. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/3976373.html">1. 用IO流拷贝歌曲(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5807521.html">2. Activiti工作流学习-----基于5.19.0版本(8)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">3. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5792658.html">4. Activiti工作流学习-----基于5.19.0版本(5)(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © liujie037
+</p>
+</div>
+</div>
+
+
+
+<div style="position: static; display: none; width: 0px; height: 0px; border: none; padding: 0px; margin: 0px;"><div id="trans-tooltip"><div id="tip-left-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-top.png&quot;);"></div><div id="tip-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-top.png&quot;) repeat-x;"></div><div id="tip-right-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-top.png&quot;);"></div><div id="tip-right" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right.png&quot;) repeat-y;"></div><div id="tip-right-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-bottom.png&quot;);"></div><div id="tip-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-bottom.png&quot;) repeat-x;"></div><div id="tip-left-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-bottom.png&quot;);"></div><div id="tip-left" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left.png&quot;);"></div><div id="trans-content"></div></div><div id="tip-arrow-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-bottom.png&quot;);"></div><div id="tip-arrow-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-top.png&quot;);"></div></div></body></html>

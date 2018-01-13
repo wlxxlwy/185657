@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://www.cnblogs.com/liujie037/p/5783665.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/bundle-AnotherEon001.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/bundle-AnotherEon001-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/liujie037/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/liujie037/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/liujie037/wlwmanifest.xml">
+<script async="" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/encoder.js"></script><script src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'liujie037', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/liujie037/">liujie037</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div id="blog_stats">
+<div class="BlogStats">随笔 - 40, 文章 - 9, 评论 - 2, 引用 - 0</div>
+</div></div>
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/liujie037/p/5783665.html">Activiti工作流学习-----基于5.19.0版本(3)</a>
+		</h2>
+		<div class="postbody">
+		<div id="cnblogs_post_body" class="blogpost-body" deep="7"><p>前面关于eventType的属性值的配置简单的说了一下，activiti支持的值如下表所示：这是我摘抄的activiti官网的</p>
+<table id="eventTypes" class="tableblock frame-all grid-all spread">
+<thead>
+<tr><th class="tableblock halign-left valign-top">Event 的名字</th><th class="tableblock halign-left valign-top">描述</th><th class="tableblock halign-left valign-top">Event的类名</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENGINE_CREATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">The process-engine this listener is attached to, has been created and is ready for API-calls.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENGINE_CLOSED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">The process-engine this listener is attached to, has been closed. API-calls to the engine are no longer possible.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENTITY_CREATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A new entity is created. The new entity is contained in the event.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENTITY_INITIALIZED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A new entity has been created and is fully initialized. If any children are created as part of the creation of an entity, this event will be fired AFTER the create/initialisation of the child entities as opposed to the <code>ENTITY_CREATE</code> event.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENTITY_UPDATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An existing is updated. The updated entity is contained in the event.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENTITY_DELETED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An existing entity is deleted. The deleted entity is contained in the event.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENTITY_SUSPENDED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An existing entity is suspended. The suspended entity is contained in the event. Will be dispatched for ProcessDefinitions, ProcessInstances and Tasks.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ENTITY_ACTIVATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An existing entity is activated. The activated entity is contained in the event. Will be dispatched for ProcessDefinitions, ProcessInstances and Tasks.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">JOB_EXECUTION_SUCCESS</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A job has been executed successfully. The event contains the job that was executed.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">JOB_EXECUTION_FAILURE</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">The execution of a job has failed. The event contains the job that was executed and the exception.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code> and <code>org.activiti…​ActivitiExceptionEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">JOB_RETRIES_DECREMENTED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">The number of job retries have been decremented due to a failed job. The event contains the job that was updated.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">TIMER_FIRED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A timer has been fired. The event contains the job that was executed?</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">JOB_CANCELED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A job has been canceled. The event contains the job that was canceled. Job can be canceled by API call, task was completed and associated boundary timer was canceled, on the new process definition deployment.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ACTIVITY_STARTED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An activity is starting to execute</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiActivityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ACTIVITY_COMPLETED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An activity is completed successfully</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiActivityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ACTIVITY_CANCELLED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An activity is going to be cancelled. There can be three reasons for activity cancellation (MessageEventSubscriptionEntity, SignalEventSubscriptionEntity, TimerEntity).</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiActivityCancelledEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ACTIVITY_SIGNALED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An activity received a signal</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiSignalEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ACTIVITY_MESSAGE_RECEIVED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An activity received a message. Dispatched before the activity receives the message. When received, a <code>ACTIVITY_SIGNAL</code> or <code>ACTIVITY_STARTED</code> will be dispatched for this activity, depending on the type (boundary-event or event-subprocess start-event)</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiMessageEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ACTIVITY_ERROR_RECEIVED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An activity has received an error event. Dispatched before the actual error has been handled by the activity. The event’s <code>activityId</code> contains a reference to the error-handling activity. This event will be either followed by a <code>ACTIVITY_SIGNALLED</code> event or <code>ACTIVITY_COMPLETE</code> for the involved activity, if the error was delivered successfully.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiErrorEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">UNCAUGHT_BPMN_ERROR</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An uncaught BPMN error has been thrown. The process did not have any handlers for that specific error. The event’s <code>activityId</code> will be empty.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiErrorEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">ACTIVITY_COMPENSATE</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An activity is about to be compensated. The event contains the id of the activity that is will be executed for compensation.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiActivityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">VARIABLE_CREATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A variable has been created. The event contains the variable name, value and related execution and task (if any).</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiVariableEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">VARIABLE_UPDATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An existing variable has been updated. The event contains the variable name, updated value and related execution and task (if any).</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiVariableEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">VARIABLE_DELETED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">An existing variable has been deleted. The event contains the variable name, last known value and related execution and task (if any).</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiVariableEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">TASK_ASSIGNED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A task has been assigned to a user. The event contains the task</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">TASK_CREATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A task has been created. This is dispatched after the <code>ENTITY_CREATE</code> event. In case the task is part of a process, this event will be fired before the task listeners are executed.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">TASK_COMPLETED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A task has been completed. This is dispatched before the <code>ENTITY_DELETE</code> event. In case the task is part of a process, this event will be fired before the process has moved on and will be followed by a <code>ACTIVITY_COMPLETE</code> event, targeting the activity that represents the completed task.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">PROCESS_COMPLETED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A process has been completed. Dispatched after the last activity <code>ACTIVITY_COMPLETED </code> event. Process is completed when it reaches state in which process instance does not have any transition to take.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiEntityEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">PROCESS_CANCELLED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A process has been cancelled. Dispatched before the process instance is deleted from runtime. Process instance is cancelled by API call <code>RuntimeService.deleteProcessInstance</code></p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiCancelledEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">MEMBERSHIP_CREATED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A user has been added to a group. The event contains the ids of the user and group involved.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiMembershipEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">MEMBERSHIP_DELETED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">A user has been removed from a group. The event contains the ids of the user and group involved.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiMembershipEvent</code></p>
+</td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">MEMBERSHIPS_DELETED</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock">All members will be removed from a group. The event is thrown before the members are removed, so they are still accessible. No individual <code>MEMBERSHIP_DELETED</code> events will be thrown if all members are deleted at once, for performance reasons.</p>
+</td>
+<td class="tableblock halign-left valign-top">
+<p class="tableblock"><code>org.activiti…​ActivitiMembershipEvent</code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>简单的说明：</p>
+<p>所有的ENTITY_\*事件关联流程引擎的entity-event事件，具体的entity-event监听的范围有这些:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>ENTITY_CREATED, ENTITY_INITIALIZED, ENTITY_DELETED</code></strong>: Attachment, Comment, Deployment, Execution, Group, IdentityLink, Job, Model, ProcessDefinition, ProcessInstance, Task, User.</p>
+</li>
+<li>
+<p><strong><code>ENTITY_UPDATED</code></strong>: Attachment, Deployment, Execution, Group, IdentityLink, Job, Model, ProcessDefinition, ProcessInstance, Task, User.</p>
+</li>
+<li>
+<p><strong><code>ENTITY_SUSPENDED, ENTITY_ACTIVATED</code></strong>: ProcessDefinition, ProcessInstance/Execution, Task.</p>
+</li>
+</ul>
+<p>补充说明：</p>
+<p>事件监听器仅仅会监听流程引擎里面的事件发生，所以如果你有其他的引擎在运行同一个数据库里面，仅仅是在同一个流程引擎中注册的事件监听器会被调用，在其他流程引擎中注册的，即使在同一个JVM运行也不会生效。即使是这样,你需要谨慎和更新/操作实体参与派遣的事件。</p>
+<h3>三、工作流核心--流程引擎</h3>
+<p>Activiti的流程引擎穿插在整个工作流中，从ProcessEngine中你可以获取不同的service,&nbsp;ProcessEngine和Service对象都是线程安全的，所以在整个服务器中你只需要存在这些单例对象就可以了。</p>
+<p><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/672697-20160818101008343-1113997137.png" alt=""></p>
+<p>ProcessEngine和Service对象的创建方式如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>ProcessEngine processEngine =<span style="color: #000000;"> ProcessEngines.getDefaultProcessEngine();
+RuntimeService runtimeService </span>=<span style="color: #000000;"> processEngine.getRuntimeService();
+RepositoryService repositoryService </span>=<span style="color: #000000;"> processEngine.getRepositoryService();
+TaskService taskService </span>=<span style="color: #000000;"> processEngine.getTaskService();
+ManagementService managementService </span>=<span style="color: #000000;"> processEngine.getManagementService();
+IdentityService identityService </span>=<span style="color: #000000;"> processEngine.getIdentityService();
+HistoryService historyService </span>=<span style="color: #000000;"> processEngine.getHistoryService();
+FormService formService </span>= processEngine.getFormService();</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>ProcessEngines.getDefaultProcessEngine()，合理的关闭和初始化所有的ProcessEngine的方法是：ProcessEngines.destroy()和ProcessEngines.init() 。ProcessEngines对象将会扫描所有不同目录的<strong>activiti.cfg.xml</strong>和<strong>activiti-context.xml</strong>文件，对于所有的<strong>activiti.cfg.xml</strong>文件，内部都会调用Activiti底层的方法，ProcessEngineConfiguration.createProcessEngineConfigurationFromInputStream(inputStream).buildProcessEngine()，对于所有的<strong>activiti-context.xml，</strong>ProcessEngine将会被以Spring的方式创建，在Spring的上下文创建后，ProcessEngine将会被加进Spring的上下文中。</p>
+<p>所有的Service是无状态的，这意味这你可以在具有多个节点的集群上面，每个相同的数据库上面进行调用这些Service,而不用关心是那一台机器调用的，任何服务的调用都是幂等的，无论它何处运行。</p>
+<p>注：<span style="font-size: 12px;">幂等：是一个数学与计算机学概念,常见于抽象代数中。 在编程中.一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。</span></p>
+<p>一般的，在Activiti的开发中都会先去获取RepositoryService，RepositoryService提供了管理和操作deployments和process definitions，这里就不用细说更多细节的东西了，一个流程定义的java对象其实就是BPMN 2.0文件的副本，流程定义对象也表现了每一步流程步骤的结构和行为。deployment是在工作流引擎里面打包的单位，也就是说它囊括了单个的bpmn文件到流程的文件夹和相关资源，在一个deployment中应该包含多少配置文件取决于开发者。RepositoryService允许发布文件夹，发布一个deployment意味着将会上传到引擎中,在存进数据库之前需要检查和解析,从那时起,deployment中所有的流程就可以启动了.</p>
+<p>RepositoryService也提供了一些功能, 比如：</p>
+<ul>
+<li>提供在流程引擎中流程定义和deployments的查询。</li>
+<li>阻塞或者激活deployment中全部或者部分流程定义。阻塞的意思是指以后这些流程定义将不会执行，直到被激活为止。</li>
+<li>获取各种资源文件，例如在deployment中的file,流程图等。</li>
+<li>获取流程定义对象的版本信息。</li>
+</ul>
+<p>RepositoryService保存了静态信息，而RuntimeService则相反，&nbsp;RuntimeService处理流程定义实例。综上所述，process definition对象是描述流程的结构和具体步骤的表现，而流程实例对象是这个流程定义对象的执行对象。同一时间每一个流程定义对象对应了多个流程实例在运行，RuntimeService同样可以获取存储process variables(流程变量)，在流程实例中获取流程变量，在流程中作用于各种execution(比如排他网关通常使用流程变量来判断流程路线的走向)，Runtimeservice也允许查询流程实例和执行实例，Executions是取用BPMN 2.0的概念，Execution(也就是执行实例)可以说一个指针指出当前的流程实例的位置。RuntimeService让流程实例的深入执行，一个流程实例有几种wait states，并且RunTimeService提供的不同的方式发信号(外部的触发器触发)给流程实例，流程实例向下执行。</p>
+<p>Tasks(任务)在Activiti中需要被实际的人员去完成，关于所有的Task的事情都交给了TaskService处理，例如：</p>
+<ul>
+<li>查询任务被分配的组或人员</li>
+<li>额外创建任务，这些任务是和流程实例没有关系的。</li>
+<li>任务的分配和相关人员的参与</li>
+<li>领取任务和完成任务，领取任务就是说当前任务被人获得，并且该任务将由他来完成。完成任务就是执行任务工作，常见的就是填写表单。</li>
+</ul>
+<p><strong>IdentityService</strong>是很简单的，它就是对users和group的增删改查，重要提示：activiti在运行的时候并不会检测用户，比如现在一个任务可以分配给任何人做，但activiti并不会去检查这个人是否存在于系统里，要知道Activiti是被用来提供LDAP,Active Directory等服务的。</p>
+<p><strong>FormService</strong>是一个可选用的Service,意味着activiti没有它不会受到影响，不会因此少了功能。这个Service用来提供start form和task form的概念。start form指的是流程实例开始之前展示用户的表单，而task form在用户需要完成任务是展示的表单。Activiti允许用户将这些表单插入流程定义中，但是没必要内嵌进入activiti。</p>
+<p><strong>HistoryService</strong>提供所有关于工作流引擎的历史数据，在流程执行的时候，一大笔数据会被引擎保存起来，例如流程实例开始的时候，记录了谁在做任务，做了多久，流程实例的走向等等，HistoryService提供查询方法支持这些数据的获取。</p>
+<strong>ManagementService</strong>也是一个在工作流中可选的service,它允许从数据库表和元数据中获取数据，他也提供了对作业(job)的查询和管理，Job被用来处理这些事情：定时器，异步延迟等。</div>
+<div class="ulist">
+<h3>&nbsp;3.1 异常的处理策略</h3>
+<p>activiti里面最常用的是org.activiti.engine.ActivitiException，他是一个运行时异常，在整个工作流API中都可以抛出，但最好还是根据api在相应的地方使用对应提供的异常类。比如：在RuntimeService中的一个方法</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * Called when the task is successfully executed.
+ * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> taskId the id of the task to complete, cannot be null.
+ * </span><span style="color: #808080;">@throws</span><span style="color: #008000;"> ActivitiObjectNotFoundException when no task exists with the given id.
+ </span><span style="color: #008000;">*/</span>
+ <span style="color: #0000ff;">void</span> complete(String taskId);</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>明确的说明的id不能为空，否则抛出ActivitiIllegalArgumentException.</p>
+<p>尽管我们想避免抛出很宽泛的异常，但是在activiti的运行执行当中，仍然有超出我们预料的异常出现，不符合下面异常的都会抛出ActivitiException：</p>
+<p>ActivitiWrongDbException：在工作流引擎发现数据库中工作流版本和引擎本身的版本不一致的时候抛出。</p>
+<p>ActivitiOptimisticLockingException：在并发读写相同数据，乐观锁发生版本不一致抛出异常。</p>
+<p>ActivitiClassLoadingException：类加载的时候没有找到或者加载它的时候发生错误会抛出异常。</p>
+<p>ActivitiObjectNotFoundException：请求对象或者动作不存在的时候抛出。</p>
+<p>ActivitiIllegalArgumentException：在调用含参API的时候，参数值非法。</p>
+<p>ActivitiTaskAlreadyClaimedException：在任务已经被认领的时候。</p>
+<p>&nbsp;</p>
+</div></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/liujie037/category/689421.html" target="_blank">javaweb学习笔记</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>, <a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>, <a href="http://www.cnblogs.com/liujie037/tag/java/">java</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5783665,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" href="javascript:void(0);">已关注</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/" target="_blank"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/">liujie037</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followees">关注 - 2</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followers">粉丝 - 9</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                我在关注他 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;);return false;">取消关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5783665,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(5783665,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/liujie037/p/5778514.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/liujie037/p/5778514.html" title="发布于2016-08-18 08:22">Activiti工作流学习-----基于5.19.0版本(2)</a><br><a href="http://www.cnblogs.com/liujie037/p/5790698.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/liujie037/p/5790698.html" title="发布于2016-08-21 02:00">Activiti工作流学习-----基于5.19.0版本(4)</a><br></div>
+</div>
+
+
+		</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2016-08-20 11:39</span> <a href="http://www.cnblogs.com/liujie037/">liujie037</a> 阅读(<span id="post_view_count">909</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5783665" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/liujie037/p/5783665.html#" onclick="AddToWz(5783665);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=198104,cb_entryId=5783665,cb_blogApp=currentBlogApp,cb_blogUserGuid='da0d9364-ae3c-e411-b908-9dcfd8948a71',cb_entryCreatedDate='2016/8/20 11:39:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/liujie037/p/5783665.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/liujie037/p/5783665.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="射禾木">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】超50万VC++源码: 大型工控、组态\仿真、建模CAD源码2018！</a><br><a href="https://cloud.tencent.com/developer/support-plan?fromSource=gwzcw.710852.710852.710852" target="_blank">【推荐】加入腾讯云自媒体扶持计划，免费领取域名&amp;服务器</a><br><a href="https://group.cnblogs.com/topic/78343.html" target="_blank">【福利】限时领取，H3 BPM给你发年终奖</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.h3bpm.net/" target="_blank"><img width="300" height="250" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/24442-20171226125601900-422637433.jpg" alt="h3bpm 活动"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/586625/" target="_blank">英媒：腾讯有意向缅甸社交网站MySquar投资</a><br> ·  <a href="https://news.cnblogs.com/n/586628/" target="_blank">构筑“掩体” 携程推动同程艺龙合并</a><br> ·  <a href="https://news.cnblogs.com/n/586624/" target="_blank">ofo“撕开”出海突破口：中国企业全球化新样本</a><br> ·  <a href="https://news.cnblogs.com/n/586626/" target="_blank">空降兵连续离职，战略再次动荡，迷茫的联想移动何时能找到方向？</a><br> ·  <a href="https://news.cnblogs.com/n/586629/" target="_blank">Intel/AMD合体CPU性能曝光：图形比GTX 1060快13%</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/34770/" target="_blank"><img width="468" height="60" src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/24442-20171208101900738-116140477.jpg" alt="阿里云C2-1208"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/585502/" target="_blank">步入云计算</a><br> ·  <a href="http://kb.cnblogs.com/page/531409/" target="_blank">以操作系统的角度述说线程与进程</a><br> ·  <a href="http://kb.cnblogs.com/page/141729/" target="_blank">软件测试转型之路</a><br> ·  <a href="http://kb.cnblogs.com/page/177402/" target="_blank">门内门外看招聘</a><br> ·  <a href="http://kb.cnblogs.com/page/112506/" target="_blank">大道至简，职场上做人做事做管理</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+<li>
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+<li>
+<a id="blog_nav_myhome" class="two_words" href="http://www.cnblogs.com/liujie037/">首页</a></li>
+<li>
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li>
+<a id="blog_nav_contact" accesskey="9" class="two_words" rel="nofollow" href="https://msg.cnblogs.com/send/liujie037">联系</a></li>
+<li>
+<a id="blog_nav_rss" class="two_words" href="http://www.cnblogs.com/liujie037/rss">订阅</a>
+<a id="blog_nav_rss_image" href="http://www.cnblogs.com/liujie037/rss"><img src="./Activiti工作流学习-----基于5.19.0版本(3) - liujie037 - 博客园_files/xml.gif" alt="订阅"></a>
+</li>
+<li>
+<a id="blog_nav_admin" class="two_words" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/12/01&#39;);return false;">&lt;</a></td><td align="center">2018年1月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/02/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td class="CalWeekendDay" align="center">6</td></tr><tr><td class="CalTodayDay" align="center">7</td><td align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td class="CalWeekendDay" align="center">13</td></tr><tr><td class="CalWeekendDay" align="center">14</td><td align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td class="CalWeekendDay" align="center">20</td></tr><tr><td class="CalWeekendDay" align="center">21</td><td align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td class="CalWeekendDay" align="center">27</td></tr><tr><td class="CalWeekendDay" align="center">28</td><td align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td></tr><tr><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td><td class="CalOtherMonthDay" align="center">9</td><td class="CalOtherMonthDay" align="center">10</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+<meta name="vs_showGrid" content="False">
+
+<h3>公告</h3>
+<div id="blog-news"><div id="profile_block">昵称：<a href="https://home.cnblogs.com/u/liujie037/">liujie037</a><br>园龄：<a href="https://home.cnblogs.com/u/liujie037/" title="入园时间：2014-09-15">3年3个月</a><br>粉丝：<a href="https://home.cnblogs.com/u/liujie037/followers/">9</a><br>关注：<a href="https://home.cnblogs.com/u/liujie037/followees/">2</a><div id="p_b_follow">已关注 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;)">-取消</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+
+<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/liujie037/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/liujie037/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/liujie037/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/liujie037/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<h3 class="catListTitle">我的标签</h3>
+<div id="MyTag">
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/tag/java/">java</a>(10)</li><li><a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/JasperReport%20%20iReport%20%20%20PDF%20%20%20jasper%20%20jrxml/">JasperReport  iReport   PDF   jasper  jrxml</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/%E8%BF%90%E7%AE%97%E7%AC%A6/">运算符</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/mysql/">mysql</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/pdf/">pdf</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/POI/">POI</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/python%E7%9A%84%E4%BB%8B%E7%BB%8D/">python的介绍</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/Servlet/">Servlet</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/liujie037/category/689411.html">c语言学习笔记(17)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/liujie037/category/791015.html">javaWeb服务器笔记(1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/liujie037/category/689421.html">javaweb学习笔记(8)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/liujie037/category/689420.html">java基础学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/liujie037/category/689422.html">SSH学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/liujie037/category/689423.html">数据库学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/liujie037/category/739422.html">图表学习笔记(5)</a></li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/liujie037/archive/2016/09.html">2016年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/liujie037/archive/2016/08.html">2016年8月 (7)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/liujie037/archive/2016/06.html">2016年6月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/liujie037/archive/2016/02.html">2016年2月 (5)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/liujie037/archive/2015/09.html">2015年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/liujie037/archive/2015/05.html">2015年5月 (19)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/liujie037/archive/2015/03.html">2015年3月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/liujie037/archive/2014/11.html">2014年11月 (3)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/liujie037/archive/2014/09.html">2014年9月 (2)</a></li>
+			
+				</ul>
+			
+	
+		<h3>文章分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_2_Link_0" href="http://www.cnblogs.com/liujie037/category/627940.html">XML学习笔记</a></li>
+			
+				</ul>
+			
+	</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/5799905.html#3496776">1. Re:Activiti工作流学习-----基于5.19.0版本(7)</a></li>
+        <li class="recent_comment_body">mark。</li>
+        <li class="recent_comment_author">--muki</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/4496910.html#3221683">2. Re:第一个C语言程序</a></li>
+        <li class="recent_comment_body">像早上的味道。</li>
+        <li class="recent_comment_author">--_Zhuqy</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">1. Activiti工作流学习-----基于5.19.0版本(7)(3291)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/4842512.html">2. 使用POI插件，提取导出excel的工具类(3208)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5790698.html">3. Activiti工作流学习-----基于5.19.0版本(4)(2909)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5176486.html">4. 利用程序将.jrxml导出为.jasper文件并用PDF显示(2)(2030)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5778514.html">5. Activiti工作流学习-----基于5.19.0版本(2)(1733)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/4496910.html">1. 第一个C语言程序(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">2. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/3976373.html">1. 用IO流拷贝歌曲(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5807521.html">2. Activiti工作流学习-----基于5.19.0版本(8)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">3. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5792658.html">4. Activiti工作流学习-----基于5.19.0版本(5)(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © liujie037
+</p>
+</div>
+</div>
+
+
+
+<div style="position: static; display: none; width: 0px; height: 0px; border: none; padding: 0px; margin: 0px;"><div id="trans-tooltip"><div id="tip-left-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-top.png&quot;);"></div><div id="tip-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-top.png&quot;) repeat-x;"></div><div id="tip-right-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-top.png&quot;);"></div><div id="tip-right" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right.png&quot;) repeat-y;"></div><div id="tip-right-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-bottom.png&quot;);"></div><div id="tip-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-bottom.png&quot;) repeat-x;"></div><div id="tip-left-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-bottom.png&quot;);"></div><div id="tip-left" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left.png&quot;);"></div><div id="trans-content"></div></div><div id="tip-arrow-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-bottom.png&quot;);"></div><div id="tip-arrow-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-top.png&quot;);"></div></div></body></html>

@@ -1,0 +1,152 @@
+Activiti5: workflow(工作流)
+  工作流(Workflow): 为了完成一项任务或事情，需要多个参与者同时或流水式共同来完成.
+     目前运用的比较的行业：物流
+  工作流主要解决的主要问题是：为了实现某个业务目标，
+	利用计算机在多个参与者之间按某种预定规则自动传递文档、信息或者任务，
+	从而提高完成业务目标效率。
+
+Activiti5的发展吏:
+ jbpm4(jboss) ---> Activiti5
+ BPM: BPM(Business Process Management)业务流程管理.
+ BPMN(Business Process Modeling and Notation)业务流程建模与标注规范.
+
+一、下载与安装：
+  官方网站: http://www.activiti.org
+  目前最新版本: 5.19.0
+  学习的版本: 5.18.0 (2015年7月31)
+
+  解压后文件夹说明：
+  -- database： 操作数据库sql脚本.
+  -- docs: api文档与用户指南.
+  -- xsd: xml约束文件.
+  -- libs: 存放了所有的jar.
+
+
+  安装：
+  -- 流程设计器：离线安装.
+     把activiti-plugin拷贝到F:\soft\eclipse\dropins
+  -- 安装数据库：
+     1. 第一种方式：直接用sql语句.
+        -- activiti.mysql55.create.engine.sql
+	-- activiti.mysql55.create.history.sql
+	-- activiti.mysql.create.identity.sql
+
+     2. 第二种方式：编程的方式.
+        -- 拷贝jar
+	-- 创建ProcessEngineConfiguration流程引擎配置信息对象.
+	-- 调用ProcessEngineConfiguration的setXxx方法来设置属性(六个方法).
+        -- 调用buildProcessEngine()来构建流程引擎.
+      
+
+     注意：Activiti5底层用得持久层框架是MyBatis3.
+
+     Activiti是一个半成品的项目，我们用它做二次开发.
+    
+二、核心类:
+   1. ProcessEngineConfiguration: 流程引擎配置信息对象.
+   2. ProcessEngine: 流程引擎.
+   七个服务：
+   1. RepositoryService: 仓储服务
+   2. RuntimeService:运行时服务
+   3. TaskService: 任务服务
+   4. IdentityService: 身份管理服务
+   5. HistoryService: 历史服务
+   6. FormService: 表单数据服务
+   7. ManagementService: 管理服务
+
+三、ProcessEngineConfiguration流程引擎配置信息对象创建方式：
+    -- 创建的方式有六种：
+    1. createProcessEngineConfigurationFromResourceDefault().
+       -- 需要加载src/activiti.cfg.xml
+       -- bean的id名称一定为：processEngineConfiguration.
+
+    2. createProcessEngineConfigurationFromResource(String resource).
+       -- 需要加载src/activiti.cfg.xml(配置文件可以改名)
+       -- bean的id名称一定为：processEngineConfiguration.
+
+    3. createProcessEngineConfigurationFromResource(String resource, String beanName).
+       -- 需要加载src/activiti.cfg.xml(配置文件可以改名)
+       -- bean的id名：processEngineConfiguration(可以自己给名字).
+
+    4. createProcessEngineConfigurationFromInputStream(InputStream inputStream).
+       -- 需要加载src/activiti.cfg.xml(配置文件可以改名)
+       -- bean的id名称一定为：processEngineConfiguration.
+
+    5. createProcessEngineConfigurationFromInputStream(InputStream inputStream, String beanName).
+       -- 需要加载src/activiti.cfg.xml(配置文件可以改名)
+       -- bean的id名：processEngineConfiguration(可以自己给名字).
+       上面的5个方法都需要加载配置文件.(集成Spring) spring-core-xx.jar、spring-beans-xx.jar.
+
+
+    6. createStandaloneProcessEngineConfiguration().
+  
+
+四、流程定义部署.
+    RepositoryService: 仓储服务对象. 
+    -- ProcessEngine.getRepositoryService()获取仓储服务对象.
+
+    -- 获取部署构建对象：
+       DeploymentBuilder deploymentBuilder = RepositoryService.createDeployment();
+    
+    -- 部署流程定义:
+
+        添加流程定义资源文件:
+        deploymentBuilder.addInputStream(String resourceName, InputStream inputStream) 
+        addZipInputStream(ZipInputStream zipInputStream)
+        
+	进行部署:
+	deploymentBuilder.deploy();
+
+  流程定义表的主键列：
+   myProcess_1:3:5004
+   KEY_:VERSION:自增长ID
+
+五、流程部署管理：
+    1. 查询所有的流程部署(act_re_deployment)
+       a. 获取仓储服务对象(RepositoryService)
+
+       b. 创建部署查询对象
+          DeploymentQuery deploymentQuery = repostoryService.createDeploymentQuery();
+       
+       c. 调用deploymentQuery部署查询对象中的方法即可.
+          
+
+    2. 删除流程部署.
+        -- repositoryService.deleteDeployment(String deploymentId); 
+	-- repositoryService.deleteDeployment(String deploymentId, boolean cascade);
+
+   
+
+六、流程定义管理：
+    1. 查询所有的流程定义：
+       a. 获取仓储服务对象(RepositoryService)
+
+       b. 创建流程定义查询对象
+          ProcessDefinitionQuery processDefinitionQuery = repostoryService.createProcessDefinitionQuery();
+       
+       c. 调用processDefinitionQuery流程定义查询对象中的方法即可.
+
+       查询最终版本的流程定义.
+       List<ProcessDefinition> processDefinitionLists = repositoryService.createProcessDefinitionQuery()
+				.latestVersion()
+				.orderByProcessDefinitionVersion()
+				.desc()
+				.list();
+	
+    2. 开启流程实例:
+       a. 根据流程定义ID开启流程实例.
+          -- 获取RuntimeService服务对象
+	     // 创建运行服务对象
+	     RuntimeService runtimeService = pe.getRuntimeService();
+	  -- 开启流程实例
+	     runtimeService.startProcessInstanceById("流程定义Id");
+
+       b. 根据流程定义的key开启流程实例.
+          -- 获取RuntimeService服务对象
+	     // 创建运行服务对象
+	     RuntimeService runtimeService = pe.getRuntimeService();
+	  -- 开启流程实例
+	     runtimeService.startProcessInstanceByKey("流程定义Key");
+         
+
+

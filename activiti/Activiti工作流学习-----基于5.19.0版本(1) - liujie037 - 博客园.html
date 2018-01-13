@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://www.cnblogs.com/liujie037/p/5776434.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/bundle-AnotherEon001.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/bundle-AnotherEon001-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/liujie037/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/liujie037/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/liujie037/wlwmanifest.xml">
+<script async="" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/encoder.js"></script><script src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'liujie037', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/liujie037/">liujie037</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div id="blog_stats">
+<div class="BlogStats">随笔 - 40, 文章 - 9, 评论 - 2, 引用 - 0</div>
+</div></div>
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/liujie037/p/5776434.html">Activiti工作流学习-----基于5.19.0版本(1)</a>
+		</h2>
+		<div class="postbody">
+		<div id="cnblogs_post_body" class="blogpost-body"><p>该版本的Activiti运行须知：</p>
+<p>1.JDK 6+，Eclipse最好是Kepler以上版本。</p>
+<p>2.试验功能都有<strong>EXPERIMENTAL</strong>标注，被标注的部分不应该视为稳定的。</p>
+<p>有兴趣的同学可以去了解下Activiti Explorer项目，他涵盖了大部分Activiti的功能，还没有Activiti概念的同学可以看看了解一下。</p>
+<h2>一、工作流开发之配置</h2>
+<p><code>Activiti沿用具有Spring配置文件风格的配置，工作流默认是加载名叫<strong>activiti.cfg.xml</strong>的文件，配置文件大体：</code></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre deep="9"><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">beans </span><span style="color: #ff0000;">xmlns</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans"</span><span style="color: #ff0000;">
+       xmlns:xsi</span><span style="color: #0000ff;">="http://www.w3.org/2001/XMLSchema-instance"</span><span style="color: #ff0000;">
+       xsi:schemaLocation</span><span style="color: #0000ff;">="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="processEngineConfiguration"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcUrl"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcDriver"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="org.h2.Driver"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcUsername"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="sa"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcPassword"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="databaseSchemaUpdate"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="true"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jobExecutorActivate"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="false"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="asyncExecutorEnabled"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="true"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="asyncExecutorActivate"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="false"</span> <span style="color: #0000ff;">/&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="mailServerHost"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="mail.my-corp.com"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="mailServerPort"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="5025"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">beans</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;而我们写好配置文件，交给activiti加载有以下几种方式：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">ProcessEngineConfiguration.createProcessEngineConfigurationFromResourceDefault();
+ProcessEngineConfiguration.createProcessEngineConfigurationFromResource(String resource);
+ProcessEngineConfiguration.createProcessEngineConfigurationFromResource(String resource, String beanName);
+ProcessEngineConfiguration.createProcessEngineConfigurationFromInputStream(InputStream inputStream);
+ProcessEngineConfiguration.createProcessEngineConfigurationFromInputStream(InputStream inputStream, String beanName);</span></pre>
+</div>
+<p>如果你喜欢零配置的话，可以：</p>
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_892215" class="syntaxhighlighter  java"><div class="toolbar"><span><a href="http://www.cnblogs.com/liujie037/p/5776434.html#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="java plain">ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration();</code></div><div class="line number2 index1 alt1"><code class="java plain">ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration();</code></div></div></td></tr></tbody></table></div></div>
+</div>
+<p>比如零配置使用其中第二种方法：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> ProcessEngine processEngine =<span style="color: #000000;"> ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration()
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">  .setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE)
+</span><span style="color: #008080;">3</span>   .setJdbcUrl("jdbc:h2:mem:my-own-db;DB_CLOSE_DELAY=1000"<span style="color: #000000;">)
+</span><span style="color: #008080;">4</span>   .setAsyncExecutorEnabled(<span style="color: #0000ff;">true</span><span style="color: #000000;">)
+</span><span style="color: #008080;">5</span>   .setAsyncExecutorActivate(<span style="color: #0000ff;">false</span><span style="color: #000000;">)
+</span><span style="color: #008080;">6</span>   .buildProcessEngine();</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>不过我个人认为琐碎的配置如果都交给代码来维护的话，太费神了！况且交给代码水平不高的程序员来写的话，也不安全。所以还是交给xml吧，零配置除了新鲜没用。</p>
+<h2><strong><code>1.1 activiti.cfg.xml文件配置</code></strong></h2>
+<p><strong><code>activiti.cfg.xml</code></strong><code>必须包含id为<code>processEngineConfiguration的bean节点，例如：</code></code></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="processEngineConfiguration"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration"</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<pre>processEngineConfiguration通常用来构造<code>ProcessEngine，activiti提供了以下4个类来定义<code>processEngineConfiguration</code>：<br></code></pre>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration</strong>:通过独立的方式获得流程引擎对象，Activiti将自己管理事务，一般的，数据库仅仅实在系统启动的时候被检测。&nbsp;</p>
+</li>
+<li>
+<p><strong>org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration</strong>: 它主要用作测试。Activiti将自己管理事务，默认使用H2数据库，数据库表将在启动被创建和关闭时被销毁。所以也就没多少配置了。</p>
+</li>
+<li>
+<p><strong>org.activiti.spring.SpringProcessEngineConfiguration</strong>: 它用作和Spring整合的。</p>
+</li>
+<li>
+<p><strong>org.activiti.engine.impl.cfg.JtaProcessEngineConfiguration</strong>: 在独立模式中，使用了分布式事务可以使用它。（本人不怎么清楚）</p>
+</li>
+</ul>
+<h5><span style="font-size: 14px;">1.1.1 数据库连接配置</span></h5>
+<p>数据库连接目前有两种配置，一种是使用MyBatis默认的数据库连接配置，另外一种是主流的数据库连接池。我是推荐后者的，因为前者的官方说明文档里面已经说了在生产上建议不使用默认的数据库连接设置。</p>
+<p>前者的配置如下：（简单掠过）</p>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcUrl"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcDriver"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="org.h2.Driver"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcUsername"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="sa"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jdbcPassword"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">=""</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>第二种方案：使用<code>javax.sql.DataSource，比如DBCP,C3P0,Druid等</code></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="dataSource"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.apache.commons.dbcp.BasicDataSource"</span> <span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="driverClassName"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="com.mysql.jdbc.Driver"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="url"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="jdbc:mysql://localhost:3306/activiti"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="username"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="activiti"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="activiti"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="defaultAutoCommit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="false"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="processEngineConfiguration"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="dataSource"</span><span style="color: #ff0000;"> ref</span><span style="color: #0000ff;">="dataSource"</span> <span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+    ...</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>Activiti工作流并没有提供数据库连接池的Jar包，我们需要手动下载加到类路径下面。</p>
+<p>无论使用那种数据库连接方案，一些数据库的其他配置需要关注：</p>
+<p><strong>databaseType：</strong>一般不需要，工作流内部会自动分析数据元，仅仅是在自动分析失败后读取该配置，目前支持的数据库有&nbsp;h2, mysql, oracle, postgres, mssql, db2。</p>
+<p><strong>databaseSchemaUpdate</strong>:</p>
+<ol>
+<li>false(默认值)---在流程引擎被创建的时候，检查匹配数据库中工作流版本和工作流jar包的工作流版本，不匹配将会抛出异常。</li>
+<li>true---在创建工作流引擎时候检测匹配数据库中工作流版本和工作流jar包的工作流版本，没有就添加，有就修改。</li>
+<li>create-update:在创建工作流引擎时候添加工作流版本，关闭引擎的时候删除工作流版本。</li>
+</ol>
+<h3>1.1.2 &nbsp;创建工作流相关的表</h3>
+<p>在类路径下面加入activiti的jar包，数据库连接的jar，添加<em>activiti.cfg.xml，</em>然后运行<em>DbSchemaCreate</em>即可<em>。</em></p>
+<p>在生产上面往往开发者并没有数据库的管理员权限，所以在activiti的jar中提供了sql给相关人员，这些表总的来说分为三大类：</p>
+<ul>
+<li><strong>engine：这是必需的。</strong></li>
+<li><strong>identity：activiti提供的用户管理功能的表。</strong></li>
+<li><strong><strong>history：流程历史记录相关表</strong></strong></li>
+</ul>
+<p>在MySQL上运行执行sql可要注意了，如果版本在5.5~5.6.3的请使用5.5版本的sql执行，或者就是升级数据库5.6.4+，因为在5.6.4的以下版本的MySQL的timestamps或者 date精度没有达到毫秒级，在工作流创建这一类列的话就会抛出异常。</p>
+<h4>1.1.3 工作流相关表的介绍</h4>
+<h4><code>工作流相关的表全部是以“ACT_”开头的，后面紧接着的第二部分是activiti提供的service的简写， 比如：<br></code></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>ACT_RE_</strong>*: <em>RE</em>&nbsp;代表&nbsp;<code>repository</code>. 包含流程定义，流程资源等。</p>
+</li>
+<li>
+<p><strong>ACT_RU_</strong>*: <em>RU</em>&nbsp;代表&nbsp;<code>runtime</code>. 这些表包含流程运行实例，任务、变量、分配工作等，这些表中仅仅存放运行数据，在流程实例执行结束后会被清除，这样表中的数据比较少，它使得程序执行很快。</p>
+</li>
+<li>
+<p><strong>ACT_ID_</strong>*: <em>ID</em>&nbsp;代表&nbsp;<code>identity</code>. 这些表包含了用户信息数据，比如用户个人信息，组信息等。</p>
+</li>
+<li>
+<p><strong>ACT_HI_</strong>*: <em>HI</em>&nbsp;代表&nbsp;<code>history</code>. 这些表包含历史数据，比如过去的流程实例，变量，任务等。</p>
+</li>
+<li>
+<p><strong>ACT_GE_</strong>*: 通用的数据表，被用来存放各种数据。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+
+
+</div>
+<h4><code>&nbsp;</code></h4>
+<p>&nbsp;</p>
+<p><code>&nbsp;</code></p>
+<p>　　</p>
+<h3 id="configuration">&nbsp;</h3>
+<h4 id="_eclipse_indigo_and_juno">&nbsp;</h4></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/liujie037/category/689421.html" target="_blank">javaweb学习笔记</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>, <a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>, <a href="http://www.cnblogs.com/liujie037/tag/java/">java</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5776434,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" href="javascript:void(0);">已关注</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/" target="_blank"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/">liujie037</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followees">关注 - 2</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followers">粉丝 - 9</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                我在关注他 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;);return false;">取消关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5776434,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(5776434,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/liujie037/p/5617661.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/liujie037/p/5617661.html" title="发布于2016-06-26 12:41">Jetty开发(2)</a><br><a href="http://www.cnblogs.com/liujie037/p/5778514.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/liujie037/p/5778514.html" title="发布于2016-08-18 08:22">Activiti工作流学习-----基于5.19.0版本(2)</a><br></div>
+</div>
+
+
+		</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2016-08-16 22:12</span> <a href="http://www.cnblogs.com/liujie037/">liujie037</a> 阅读(<span id="post_view_count">1358</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5776434" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/liujie037/p/5776434.html#" onclick="AddToWz(5776434);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=198104,cb_entryId=5776434,cb_blogApp=currentBlogApp,cb_blogUserGuid='da0d9364-ae3c-e411-b908-9dcfd8948a71',cb_entryCreatedDate='2016/8/16 22:12:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/liujie037/p/5776434.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/liujie037/p/5776434.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="射禾木">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】超50万VC++源码: 大型工控、组态\仿真、建模CAD源码2018！</a><br><a href="https://cloud.tencent.com/developer/support-plan?fromSource=gwzcw.710852.710852.710852" target="_blank">【推荐】加入腾讯云自媒体扶持计划，免费领取域名&amp;服务器</a><br><a href="https://group.cnblogs.com/topic/78343.html" target="_blank">【福利】限时领取，H3 BPM给你发年终奖</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.h3bpm.net/" target="_blank"><img width="300" height="250" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/24442-20171226125601900-422637433.jpg" alt="h3bpm 活动"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/586625/" target="_blank">英媒：腾讯有意向缅甸社交网站MySquar投资</a><br> ·  <a href="https://news.cnblogs.com/n/586628/" target="_blank">构筑“掩体” 携程推动同程艺龙合并</a><br> ·  <a href="https://news.cnblogs.com/n/586624/" target="_blank">ofo“撕开”出海突破口：中国企业全球化新样本</a><br> ·  <a href="https://news.cnblogs.com/n/586626/" target="_blank">空降兵连续离职，战略再次动荡，迷茫的联想移动何时能找到方向？</a><br> ·  <a href="https://news.cnblogs.com/n/586629/" target="_blank">Intel/AMD合体CPU性能曝光：图形比GTX 1060快13%</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/34770/" target="_blank"><img width="468" height="60" src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/24442-20171208101900738-116140477.jpg" alt="阿里云C2-1208"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/585502/" target="_blank">步入云计算</a><br> ·  <a href="http://kb.cnblogs.com/page/531409/" target="_blank">以操作系统的角度述说线程与进程</a><br> ·  <a href="http://kb.cnblogs.com/page/141729/" target="_blank">软件测试转型之路</a><br> ·  <a href="http://kb.cnblogs.com/page/177402/" target="_blank">门内门外看招聘</a><br> ·  <a href="http://kb.cnblogs.com/page/112506/" target="_blank">大道至简，职场上做人做事做管理</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+<li>
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+<li>
+<a id="blog_nav_myhome" class="two_words" href="http://www.cnblogs.com/liujie037/">首页</a></li>
+<li>
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li>
+<a id="blog_nav_contact" accesskey="9" class="two_words" rel="nofollow" href="https://msg.cnblogs.com/send/liujie037">联系</a></li>
+<li>
+<a id="blog_nav_rss" class="two_words" href="http://www.cnblogs.com/liujie037/rss">订阅</a>
+<a id="blog_nav_rss_image" href="http://www.cnblogs.com/liujie037/rss"><img src="./Activiti工作流学习-----基于5.19.0版本(1) - liujie037 - 博客园_files/xml.gif" alt="订阅"></a>
+</li>
+<li>
+<a id="blog_nav_admin" class="two_words" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/12/01&#39;);return false;">&lt;</a></td><td align="center">2018年1月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/02/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td class="CalWeekendDay" align="center">6</td></tr><tr><td class="CalTodayDay" align="center">7</td><td align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td class="CalWeekendDay" align="center">13</td></tr><tr><td class="CalWeekendDay" align="center">14</td><td align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td class="CalWeekendDay" align="center">20</td></tr><tr><td class="CalWeekendDay" align="center">21</td><td align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td class="CalWeekendDay" align="center">27</td></tr><tr><td class="CalWeekendDay" align="center">28</td><td align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td></tr><tr><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td><td class="CalOtherMonthDay" align="center">9</td><td class="CalOtherMonthDay" align="center">10</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+<meta name="vs_showGrid" content="False">
+
+<h3>公告</h3>
+<div id="blog-news"><div id="profile_block">昵称：<a href="https://home.cnblogs.com/u/liujie037/">liujie037</a><br>园龄：<a href="https://home.cnblogs.com/u/liujie037/" title="入园时间：2014-09-15">3年3个月</a><br>粉丝：<a href="https://home.cnblogs.com/u/liujie037/followers/">9</a><br>关注：<a href="https://home.cnblogs.com/u/liujie037/followees/">2</a><div id="p_b_follow">已关注 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;)">-取消</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+
+<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/liujie037/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/liujie037/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/liujie037/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/liujie037/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<h3 class="catListTitle">我的标签</h3>
+<div id="MyTag">
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/tag/java/">java</a>(10)</li><li><a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/JasperReport%20%20iReport%20%20%20PDF%20%20%20jasper%20%20jrxml/">JasperReport  iReport   PDF   jasper  jrxml</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/%E8%BF%90%E7%AE%97%E7%AC%A6/">运算符</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/mysql/">mysql</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/pdf/">pdf</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/POI/">POI</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/python%E7%9A%84%E4%BB%8B%E7%BB%8D/">python的介绍</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/Servlet/">Servlet</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/liujie037/category/689411.html">c语言学习笔记(17)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/liujie037/category/791015.html">javaWeb服务器笔记(1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/liujie037/category/689421.html">javaweb学习笔记(8)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/liujie037/category/689420.html">java基础学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/liujie037/category/689422.html">SSH学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/liujie037/category/689423.html">数据库学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/liujie037/category/739422.html">图表学习笔记(5)</a></li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/liujie037/archive/2016/09.html">2016年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/liujie037/archive/2016/08.html">2016年8月 (7)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/liujie037/archive/2016/06.html">2016年6月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/liujie037/archive/2016/02.html">2016年2月 (5)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/liujie037/archive/2015/09.html">2015年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/liujie037/archive/2015/05.html">2015年5月 (19)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/liujie037/archive/2015/03.html">2015年3月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/liujie037/archive/2014/11.html">2014年11月 (3)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/liujie037/archive/2014/09.html">2014年9月 (2)</a></li>
+			
+				</ul>
+			
+	
+		<h3>文章分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_2_Link_0" href="http://www.cnblogs.com/liujie037/category/627940.html">XML学习笔记</a></li>
+			
+				</ul>
+			
+	</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/5799905.html#3496776">1. Re:Activiti工作流学习-----基于5.19.0版本(7)</a></li>
+        <li class="recent_comment_body">mark。</li>
+        <li class="recent_comment_author">--muki</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/4496910.html#3221683">2. Re:第一个C语言程序</a></li>
+        <li class="recent_comment_body">像早上的味道。</li>
+        <li class="recent_comment_author">--_Zhuqy</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">1. Activiti工作流学习-----基于5.19.0版本(7)(3291)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/4842512.html">2. 使用POI插件，提取导出excel的工具类(3208)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5790698.html">3. Activiti工作流学习-----基于5.19.0版本(4)(2909)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5176486.html">4. 利用程序将.jrxml导出为.jasper文件并用PDF显示(2)(2030)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5778514.html">5. Activiti工作流学习-----基于5.19.0版本(2)(1733)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/4496910.html">1. 第一个C语言程序(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">2. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/3976373.html">1. 用IO流拷贝歌曲(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5807521.html">2. Activiti工作流学习-----基于5.19.0版本(8)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">3. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5792658.html">4. Activiti工作流学习-----基于5.19.0版本(5)(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © liujie037
+</p>
+</div>
+</div>
+
+
+
+<div style="position: static; display: none; width: 0px; height: 0px; border: none; padding: 0px; margin: 0px;"><div id="trans-tooltip"><div id="tip-left-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-top.png&quot;);"></div><div id="tip-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-top.png&quot;) repeat-x;"></div><div id="tip-right-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-top.png&quot;);"></div><div id="tip-right" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right.png&quot;) repeat-y;"></div><div id="tip-right-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-bottom.png&quot;);"></div><div id="tip-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-bottom.png&quot;) repeat-x;"></div><div id="tip-left-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-bottom.png&quot;);"></div><div id="tip-left" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left.png&quot;);"></div><div id="trans-content"></div></div><div id="tip-arrow-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-bottom.png&quot;);"></div><div id="tip-arrow-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-top.png&quot;);"></div></div></body></html>

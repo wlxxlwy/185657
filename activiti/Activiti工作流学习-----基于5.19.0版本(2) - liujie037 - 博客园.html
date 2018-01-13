@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://www.cnblogs.com/liujie037/p/5778514.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/bundle-AnotherEon001.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/bundle-AnotherEon001-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/liujie037/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/liujie037/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/liujie037/wlwmanifest.xml">
+<script async="" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/encoder.js"></script><script src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'liujie037', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/liujie037/">liujie037</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div id="blog_stats">
+<div class="BlogStats">随笔 - 40, 文章 - 9, 评论 - 2, 引用 - 0</div>
+</div></div>
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/liujie037/p/5778514.html">Activiti工作流学习-----基于5.19.0版本(2)</a>
+		</h2>
+		<div class="postbody">
+		<div id="cnblogs_post_body" class="blogpost-body" deep="7"><h2>二、activiti.cfg.xml的其他bean节点配置</h2>
+<h3 id="jobExecutorConfiguration">2.1 新特性：Job Executor和Async Executor</h3>
+<p>从5.17.0版本的activiti开始提供作业执行者(Job Executor)和异步作业执行者(Async Executor),Async Executor执行表现更好，并且执行异步作业对数据库更加友善。activiti官方推荐使用Async Executor，并且一些老的Job Executor依旧有效。在Java EE 7运行环境中，JSR-236规范支持容器管理ManagedJobExecutor和ManagedAsyncJobExecutor，例如可以配置如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="threadFactory"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.springframework.jndi.JndiObjectFactoryBean"</span><span style="color: #0000ff;">&gt;</span>
+   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jndiName"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="java:jboss/ee/concurrency/factory/default"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="customJobExecutor"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.activiti.engine.impl.jobexecutor.ManagedJobExecutor"</span><span style="color: #0000ff;">&gt;</span>
+   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> ... </span><span style="color: #008000;">--&gt;</span>
+   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="threadFactory"</span><span style="color: #ff0000;"> ref</span><span style="color: #0000ff;">="threadFactory"</span> <span style="color: #0000ff;">/&gt;</span>
+   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> ... </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3 id="_job_executor_activation">2.2 激活Job executor</h3>
+<p id="_job_executor_activation">Job executor作为管理多线程执行定时任务的组件，在单元测试场景里，Job executor在多线程中执行是测试不方便的，所以activiti提供了api解决了这个麻烦：</p>
+<p>查询获取Job executor可以通过ManagementService.createJobQuery方法实现，执行该作业可以调用ManagementService.executeJob，使得在单元测试中Job executor可以被控制,顺利关闭Job executor。默认的Job executor是在流程引擎启动就被激活的，如果需要关闭这个功能，可以配置：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="jobExecutorActivate"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="false"</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<h3>2.3 激活Async executor</h3>
+<p>AsyncExecutor作为管理线程池执行定时任务的组件，默认activiti是关闭AsyncExecutor的，使用它的配置如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="asyncExecutorEnabled"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="true"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="asyncExecutorActivate"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="true"</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>asyncExecutorEnabled属性设置设置true后将代替那些老的Job executor，第二个属性asyncExecutorActivate是指示activiti在流程引擎启动就激活AsyncExecutor。</p>
+<h3>2.4 流程定义缓存配置</h3>
+<p>所有被解析的流程定义都会被缓存起来，这是因为流程定义是不会改变的，没有必要多次请求数据库。默认的activiti是没有限制缓存数量的，如果需要设置：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="processDefinitionCacheLimit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="10"</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>缓存内部是使用HashMap数据结构和LRU算法实现的。当然，缓存的数量的设置值最好根据流程定义的总数和正在运行的流程实例使用的流程定义数量决定。你也可以使用自定义的缓存实现类替换内部提供的缓存实现，只需要实现接口org.activiti.engine.impl.persistence.deploy.DeploymentCache，然后配置即可：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="processDefinitionCache"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="org.activiti.MyCache"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">property</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>对于自定义缓存实现的缓存数量限制可以设置knowledgeBaseCacheLimit和knowledgeBaseCache属性。</p>
+<h3>2.5 日志</h3>
+<p>在activiti 5.12的时候，日志框架使用的是SLF4J，替换掉早前的jdk的日志工具，现在所有的日志(activiti, spring, mybatis, …​)都通过SLF4J来输出日志，你可以具体的日志实现。</p>
+<p>工作流没有提供日志的具体实现jar包在依赖里面，需要你自己手动添加，如果没有添加，SLF4J会全程使用NOP-logger，它不会全程记录所有的日志的，并且警告没有被记录，在Maven中比如添加log4j：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.slf4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>slf4j-log4j12<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>activiti-explorer和activiti-rest项目是使用的log4j，activiti项目测试也是使用的log4j记录日志。</p>
+<p>如果你的类路径下面已经有了commons-logging的jar了的话，这时需要commons-logging干的活交给slf4j,比如要让spring输出日志使用slf4j的话，需要使用依赖：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>org.slf4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">groupId</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>jcl-over-slf4j<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">artifactId</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dependency</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>如果使用的服务器是Tomcat,需要注意tomcat自己的类路径下面也有日志的jar包，解决办法参考：http://www.slf4j.org/codes.html#release</p>
+<h3>2.6 日志配置相关工作流上下文</h3>
+<p>从版本5.13开始，Activiti支持使用slf4j记录工作流上下文，日志通过底层日志logger记录的内容有：</p>
+<div class="ulist">
+<ul>
+<li>
+<p>processDefinition Id ------ &nbsp; &nbsp;mdcProcessDefinitionID</p>
+</li>
+<li>
+<p>processInstance Id &nbsp;------- &nbsp; mdcProcessInstanceID</p>
+</li>
+<li>
+<p>execution Id -　　 &nbsp; ---- 　　mdcexecutionId</p>
+</li>
+</ul>
+<p>日志记录有格式化的信息和其他的普通信息，例如日志记录可以配置：</p>
+<div class="cnblogs_code">
+<pre> log4j.appender.consoleAppender.layout.ConversionPattern =ProcessDefinitionId=%<span style="color: #000000;">X{mdcProcessDefinitionID}
+executionId</span>=%X{mdcExecutionId} mdcProcessInstanceID=%X{mdcProcessInstanceID} mdcBusinessKey=%X{mdcBusinessKey} %m%n<span style="color: #800000;">"</span></pre>
+</div>
+<div class="tran-result">在系统关键的地方进行记录或检测是非常有必要的,通过日志分析也是其中一种手段。</div>
+<h3 class="tran-result">2.7 事件处理</h3>
+<p>在Activiti 5.15中引入了事件机制，它让你在工作流引擎中的各种事件发生时得到消息，activiti能够支持注册一个侦听器对于某些类型的事件而不是任何类型的事件发生时收到通知，一方面可以在配置文件中添加engine-wide事件监听器配置，然后engine-wide事件监听器类会调用相应的API，另一方面也可以在在BPMN配置文件中配置。</p>
+<p>所有的事件类都是org.activiti.engine.delegate.event.ActivitiEvent的子类，事件会提供type、executionId、processInstanceId和processDefinitionId，某些事件包含了事件发生的上下文，附加载荷的信息。</p>
+<h3>2.8 事件监听器的实现</h3>
+<p>事件监听器需要实现org.activiti.engine.delegate.event.ActivitiEventListener，例如：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span> MyEventListener <span style="color: #0000ff;">implements</span><span style="color: #000000;"> ActivitiEventListener {
+
+  @Override
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onEvent(ActivitiEvent event) {
+    </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (event.getType()) {
+
+      </span><span style="color: #0000ff;">case</span><span style="color: #000000;"> JOB_EXECUTION_SUCCESS:
+        System.out.println(</span>"A job well done!"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+
+      </span><span style="color: #0000ff;">case</span><span style="color: #000000;"> JOB_EXECUTION_FAILURE:
+        System.out.println(</span>"A job has failed..."<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+
+      </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+        System.out.println(</span>"Event received: " +<span style="color: #000000;"> event.getType());
+    }
+  }
+
+  @Override
+  </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isFailOnException() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> The logic in the onEvent method of this listener is not critical, exceptions
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> can be ignored if logging fails...</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+  }
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<pre>MyEventListener接收标准事件类型并处理和异常处理，其中isFailOnException()决定了onEvent(..)是否抛出异常，如果返回false,异常将会被忽略。如果返回true,异常将会逐级向上提交，<br data-filtered="filtered">造成当前运行的命令的失败。如果当前执行具有事务，事务将会回滚。activiti官方建议如果事件的业务不是非常重要，还是返回false。<br data-filtered="filtered">activiti提供了通用的实现类来处理普通的事件监听，例如：<br data-filtered="filtered"><strong>org.activiti.engine.delegate.event.BaseEntityEventListener：</strong>它将会监听entity类的事件，它隐藏了类型检查和重写了四个方法，onCreate(..), onUpdate(..)和onDelete(..)，<br data-filtered="filtered">对于其他的事件，onEntityEvent(..)将会被调用。<br data-filtered="filtered"><br data-filtered="filtered"><strong><span style="font-size: 15px;">2.9 事件的相关配置<br data-filtered="filtered"><br data-filtered="filtered"></span></strong><span style="font-size: 15px;">如果一个事件监听器在流程引擎配置，流程引擎启动将会激活，即使重启引擎也会保持该状态。eventListeners属性值为org.activiti.engine.delegate.event.ActivitiEventListener<br data-filtered="filtered">的实例的list,例如：<br data-filtered="filtered"></span></pre>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="processEngineConfiguration"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    ...
+    </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="eventListeners"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="org.activiti.engine.example.MyEventListener"</span> <span style="color: #0000ff;">/&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">property</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<pre>另外typedEventListeners属性值为Map，key为事件的名称，value表示为一个org.activiti.engine.delegate.event.ActivitiEventListener的list集合，例如：</pre>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="processEngineConfiguration"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    ...
+    </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">property </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="typedEventListeners"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">map</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">entry </span><span style="color: #ff0000;">key</span><span style="color: #0000ff;">="JOB_EXECUTION_SUCCESS,JOB_EXECUTION_FAILURE"</span> <span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">bean </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="org.activiti.engine.example.MyJobEventListener"</span> <span style="color: #0000ff;">/&gt;</span>
+          <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">list</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">entry</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">map</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">property</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">bean</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>事件发生的顺序取决于被配置的监听器的顺序。首先，所有的普通的监听器会被调用(也就是说eventListeners属性，至于eventListeners的内部的监听器顺序和配置的顺序有关)</p>
+<p>,然后是在typedListeners属性配置的会被调用。</p>
+<h3>2.10 程序运行时动态添加监听器</h3>
+<pre><span style="font-size: 15px;">调用RuntimeService的api方法可以实现这个功能：（注意：系统重启会导致监听器消失）<br data-filtered="filtered"></span></pre>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">void addEventListener(ActivitiEventListener listenerToAdd);
+
+void addEventListener(ActivitiEventListener listenerToAdd, ActivitiEventType... types);
+
+void removeEventListener(ActivitiEventListener listenerToRemove);</span></pre>
+</div>
+<pre></pre>
+<h3>2.11 添加监听器到流程定义中</h3>
+<p><span style="font-size: 15px;"><code>在流程定义中添加监听器是允许的，这里定义的监听器会被流程定义相关的事件和所有的相关的流程实例启动后调用，监听器的实现类可以使用全类名、能够被解析为bean的表达式。例如下面这个配置，第一个监听器将接收所有的事件，它使用的是全类名进行配置的，第二个监听器仅仅是在作业执行成功或者失败会被执行，并且使用了在流程引擎中定义的beans属性配置的监听器的表达式。</code></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">process </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="testEventListeners"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:eventListener </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="org.activiti.engine.test.MyEventListener"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:eventListener </span><span style="color: #ff0000;">delegateExpression</span><span style="color: #0000ff;">="${testEventListener}"</span><span style="color: #ff0000;"> events</span><span style="color: #0000ff;">="JOB_EXECUTION_SUCCESS,JOB_EXECUTION_FAILURE"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+  ...
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">process</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;如果我们需要在流程定义中配置监听entity的监听器的话，可以这样配置：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">process </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="testEventListeners"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:eventListener </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="org.activiti.engine.test.MyEventListener"</span><span style="color: #ff0000;"> entityType</span><span style="color: #0000ff;">="task"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">activiti:eventListener </span><span style="color: #ff0000;">delegateExpression</span><span style="color: #0000ff;">="${testEventListener}"</span><span style="color: #ff0000;"> events</span><span style="color: #0000ff;">="ENTITY_CREATED"</span><span style="color: #ff0000;"> entityType</span><span style="color: #0000ff;">="task"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">extensionElements</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+  ...
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">process</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>其中entityType的值有：attachment, comment, execution, identity-link, job, process-instance, process-definition, task。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/liujie037/category/689421.html" target="_blank">javaweb学习笔记</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>, <a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>, <a href="http://www.cnblogs.com/liujie037/tag/java/">java</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5778514,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" href="javascript:void(0);">已关注</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/" target="_blank"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/">liujie037</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followees">关注 - 2</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followers">粉丝 - 9</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                我在关注他 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;);return false;">取消关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5778514,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(5778514,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/liujie037/p/5776434.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/liujie037/p/5776434.html" title="发布于2016-08-16 22:12">Activiti工作流学习-----基于5.19.0版本(1)</a><br><a href="http://www.cnblogs.com/liujie037/p/5783665.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/liujie037/p/5783665.html" title="发布于2016-08-20 11:39">Activiti工作流学习-----基于5.19.0版本(3)</a><br></div>
+</div>
+
+
+		</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2016-08-18 08:22</span> <a href="http://www.cnblogs.com/liujie037/">liujie037</a> 阅读(<span id="post_view_count">1733</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5778514" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/liujie037/p/5778514.html#" onclick="AddToWz(5778514);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=198104,cb_entryId=5778514,cb_blogApp=currentBlogApp,cb_blogUserGuid='da0d9364-ae3c-e411-b908-9dcfd8948a71',cb_entryCreatedDate='2016/8/18 8:22:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/liujie037/p/5778514.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/liujie037/p/5778514.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="射禾木">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】超50万VC++源码: 大型工控、组态\仿真、建模CAD源码2018！</a><br><a href="https://cloud.tencent.com/developer/support-plan?fromSource=gwzcw.710852.710852.710852" target="_blank">【推荐】加入腾讯云自媒体扶持计划，免费领取域名&amp;服务器</a><br><a href="https://group.cnblogs.com/topic/78343.html" target="_blank">【福利】限时领取，H3 BPM给你发年终奖</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.h3bpm.net/" target="_blank"><img width="300" height="250" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/24442-20171226125601900-422637433.jpg" alt="h3bpm 活动"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/586625/" target="_blank">英媒：腾讯有意向缅甸社交网站MySquar投资</a><br> ·  <a href="https://news.cnblogs.com/n/586628/" target="_blank">构筑“掩体” 携程推动同程艺龙合并</a><br> ·  <a href="https://news.cnblogs.com/n/586624/" target="_blank">ofo“撕开”出海突破口：中国企业全球化新样本</a><br> ·  <a href="https://news.cnblogs.com/n/586626/" target="_blank">空降兵连续离职，战略再次动荡，迷茫的联想移动何时能找到方向？</a><br> ·  <a href="https://news.cnblogs.com/n/586629/" target="_blank">Intel/AMD合体CPU性能曝光：图形比GTX 1060快13%</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/34770/" target="_blank"><img width="468" height="60" src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/24442-20171208101900738-116140477.jpg" alt="阿里云C2-1208"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/585502/" target="_blank">步入云计算</a><br> ·  <a href="http://kb.cnblogs.com/page/531409/" target="_blank">以操作系统的角度述说线程与进程</a><br> ·  <a href="http://kb.cnblogs.com/page/141729/" target="_blank">软件测试转型之路</a><br> ·  <a href="http://kb.cnblogs.com/page/177402/" target="_blank">门内门外看招聘</a><br> ·  <a href="http://kb.cnblogs.com/page/112506/" target="_blank">大道至简，职场上做人做事做管理</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+<li>
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+<li>
+<a id="blog_nav_myhome" class="two_words" href="http://www.cnblogs.com/liujie037/">首页</a></li>
+<li>
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li>
+<a id="blog_nav_contact" accesskey="9" class="two_words" rel="nofollow" href="https://msg.cnblogs.com/send/liujie037">联系</a></li>
+<li>
+<a id="blog_nav_rss" class="two_words" href="http://www.cnblogs.com/liujie037/rss">订阅</a>
+<a id="blog_nav_rss_image" href="http://www.cnblogs.com/liujie037/rss"><img src="./Activiti工作流学习-----基于5.19.0版本(2) - liujie037 - 博客园_files/xml.gif" alt="订阅"></a>
+</li>
+<li>
+<a id="blog_nav_admin" class="two_words" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/12/01&#39;);return false;">&lt;</a></td><td align="center">2018年1月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/02/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td class="CalWeekendDay" align="center">6</td></tr><tr><td class="CalTodayDay" align="center">7</td><td align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td class="CalWeekendDay" align="center">13</td></tr><tr><td class="CalWeekendDay" align="center">14</td><td align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td class="CalWeekendDay" align="center">20</td></tr><tr><td class="CalWeekendDay" align="center">21</td><td align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td class="CalWeekendDay" align="center">27</td></tr><tr><td class="CalWeekendDay" align="center">28</td><td align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td></tr><tr><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td><td class="CalOtherMonthDay" align="center">9</td><td class="CalOtherMonthDay" align="center">10</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+<meta name="vs_showGrid" content="False">
+
+<h3>公告</h3>
+<div id="blog-news"><div id="profile_block">昵称：<a href="https://home.cnblogs.com/u/liujie037/">liujie037</a><br>园龄：<a href="https://home.cnblogs.com/u/liujie037/" title="入园时间：2014-09-15">3年3个月</a><br>粉丝：<a href="https://home.cnblogs.com/u/liujie037/followers/">9</a><br>关注：<a href="https://home.cnblogs.com/u/liujie037/followees/">2</a><div id="p_b_follow">已关注 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;)">-取消</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+
+<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/liujie037/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/liujie037/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/liujie037/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/liujie037/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<h3 class="catListTitle">我的标签</h3>
+<div id="MyTag">
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/tag/java/">java</a>(10)</li><li><a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/JasperReport%20%20iReport%20%20%20PDF%20%20%20jasper%20%20jrxml/">JasperReport  iReport   PDF   jasper  jrxml</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/%E8%BF%90%E7%AE%97%E7%AC%A6/">运算符</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/mysql/">mysql</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/pdf/">pdf</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/POI/">POI</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/python%E7%9A%84%E4%BB%8B%E7%BB%8D/">python的介绍</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/Servlet/">Servlet</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/liujie037/category/689411.html">c语言学习笔记(17)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/liujie037/category/791015.html">javaWeb服务器笔记(1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/liujie037/category/689421.html">javaweb学习笔记(8)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/liujie037/category/689420.html">java基础学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/liujie037/category/689422.html">SSH学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/liujie037/category/689423.html">数据库学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/liujie037/category/739422.html">图表学习笔记(5)</a></li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/liujie037/archive/2016/09.html">2016年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/liujie037/archive/2016/08.html">2016年8月 (7)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/liujie037/archive/2016/06.html">2016年6月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/liujie037/archive/2016/02.html">2016年2月 (5)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/liujie037/archive/2015/09.html">2015年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/liujie037/archive/2015/05.html">2015年5月 (19)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/liujie037/archive/2015/03.html">2015年3月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/liujie037/archive/2014/11.html">2014年11月 (3)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/liujie037/archive/2014/09.html">2014年9月 (2)</a></li>
+			
+				</ul>
+			
+	
+		<h3>文章分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_2_Link_0" href="http://www.cnblogs.com/liujie037/category/627940.html">XML学习笔记</a></li>
+			
+				</ul>
+			
+	</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/5799905.html#3496776">1. Re:Activiti工作流学习-----基于5.19.0版本(7)</a></li>
+        <li class="recent_comment_body">mark。</li>
+        <li class="recent_comment_author">--muki</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/4496910.html#3221683">2. Re:第一个C语言程序</a></li>
+        <li class="recent_comment_body">像早上的味道。</li>
+        <li class="recent_comment_author">--_Zhuqy</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">1. Activiti工作流学习-----基于5.19.0版本(7)(3291)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/4842512.html">2. 使用POI插件，提取导出excel的工具类(3208)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5790698.html">3. Activiti工作流学习-----基于5.19.0版本(4)(2909)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5176486.html">4. 利用程序将.jrxml导出为.jasper文件并用PDF显示(2)(2030)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5778514.html">5. Activiti工作流学习-----基于5.19.0版本(2)(1733)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/4496910.html">1. 第一个C语言程序(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">2. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/3976373.html">1. 用IO流拷贝歌曲(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5807521.html">2. Activiti工作流学习-----基于5.19.0版本(8)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">3. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5792658.html">4. Activiti工作流学习-----基于5.19.0版本(5)(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © liujie037
+</p>
+</div>
+</div>
+
+
+
+<div style="position: static; display: none; width: 0px; height: 0px; border: none; padding: 0px; margin: 0px;"><div id="trans-tooltip"><div id="tip-left-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-top.png&quot;);"></div><div id="tip-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-top.png&quot;) repeat-x;"></div><div id="tip-right-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-top.png&quot;);"></div><div id="tip-right" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right.png&quot;) repeat-y;"></div><div id="tip-right-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-bottom.png&quot;);"></div><div id="tip-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-bottom.png&quot;) repeat-x;"></div><div id="tip-left-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-bottom.png&quot;);"></div><div id="tip-left" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left.png&quot;);"></div><div id="trans-content"></div></div><div id="tip-arrow-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-bottom.png&quot;);"></div><div id="tip-arrow-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-top.png&quot;);"></div></div></body></html>

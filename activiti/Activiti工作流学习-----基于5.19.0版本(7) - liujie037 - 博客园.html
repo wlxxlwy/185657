@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://www.cnblogs.com/liujie037/p/5799905.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/bundle-AnotherEon001.css">
+<link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/bundle-AnotherEon001-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/liujie037/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/liujie037/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/liujie037/wlwmanifest.xml">
+<script async="" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/analytics.js"></script><script type="text/javascript" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/encoder.js"></script><script src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'liujie037', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/blog-common.js" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/liujie037/">liujie037</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div id="blog_stats">
+<div class="BlogStats">随笔 - 40, 文章 - 9, 评论 - 2, 引用 - 0</div>
+</div></div>
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/liujie037/p/5799905.html">Activiti工作流学习-----基于5.19.0版本(7)</a>
+		</h2>
+		<div class="postbody">
+		<div id="cnblogs_post_body" class="blogpost-body" deep="7"><h2 id="bpmnConstructs">八、BPMN 2.0流程图详解</h2>
+<p>BPMN 2.0的标准的出现是好事，用户不在被某个工作流开发商绑架或者在工作流中开发妥协，Activiti作为BPMN标准的一套解决方案，使得用户在选择工作流框架时可以平滑的迁移过渡。也有负面的不好的消息，就是BPMN标准是大量开会讨论和开发商妥协的结果(一般这是在做梦)，所以用户在阅读BPMN规范会感觉到它太笨重了，Activiti开发工作流将用户体验放到第一位置，开发出了工作流设计插件。工作流官方推荐使用工作流设计插件。</p>
+<h3>8.1 事件（Event）</h3>
+<p>每个流程设计都有start event和end event,而在整个流程中发生的事件都是有event来表示。事件在设计面板中用圆圈表示，在BPMN 2.0中主要有两种事件：</p>
+<ul>
+<li><strong>Catching：</strong>当流程执行到事件的时候， 它会等待被触发。而触发条件需要用户配置在这个圆圈图标的属性里面，和下面第二种圆圈图标外形上的区别是：Catching图标里面是空的，就是空圈。</li>
+<li><strong>Throwing：</strong>当流程执行到事件的时候，它会立即触发，同样的触发器也需要配置在图标属性里面，和Catching图标不同是圆圈图标里面有东西是，黑色的。</li>
+</ul>
+<p>总的来说，事件定义决定了事件的语义。如果没有事件定义，这个事件就不做什么特别的事情。 没有设置事件定义的开始事件不会在启动流程时做任何事情。如果给开始事件添加了一个事件定义 （比如定时器事件定义）我们就声明了开始流程的事件 "类型 " （这时定时器事件监听器会在某个时间被触发）。</p>
+<h5><span style="font-size: 14px;">8.1.1 定时器事件</span></h5>
+<p>　　定时器事件是根据指定的时间触发的事件。可以用于开始事件(start event)， 中间事件(intermediate event)和边界事件(boundary event)。定时器事件必须含有下面一种属性的配置。</p>
+<p><strong>timeDate:</strong>指定ISO 8601格式的日期定时器激活。(至于ISO 8601日期格式可以详见百度：http://baike.baidu.com/view/931641.htm)</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timeDate</span><span style="color: #0000ff;">&gt;</span>2016-08-23T18:13:00<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timeDate</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong>timeDuration：</strong>定义定时器经过多少时间后激活。时间段也是取得ISO 8601格式，比如在一年三个月五天六小时七分三十秒内，可以写成P1Y3M5DT6H7M30S。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timeDuration</span><span style="color: #0000ff;">&gt;</span>P10D<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timeDuration</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong>timeCycle：</strong>定义定时器重复间隔，在某些场景使用，比如周期性的启动流程，任务超时发送提醒。timeCycle的设置目前有两种方式：ISO 8601和Cron表达式(quartz任务调度框架提供的解决方案)，activiti默认是使用ISO 8601。例如现在重复三次，每次间隔10小时：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timeCycle </span><span style="color: #ff0000;">activiti:endDate</span><span style="color: #0000ff;">="2016-08-22T16:42:11+00:00"</span><span style="color: #0000ff;">&gt;</span>R3/PT10H<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timeCycle</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_527563" class="syntaxhighlighter  html"><div class="toolbar"><span><a href="http://www.cnblogs.com/liujie037/p/5799905.html#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="html plain">&lt;</code><code class="html keyword">timerEventDefinition</code><code class="html plain">&gt;</code></div><div class="line number2 index1 alt1"><code class="html spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="html plain">&lt;</code><code class="html keyword">timeCycle</code><code class="html plain">&gt;R3/PT10H/${EndDate}&lt;/</code><code class="html keyword">timeCycle</code><code class="html plain">&gt;</code></div><div class="line number3 index2 alt2"><code class="html plain">&lt;/</code><code class="html keyword">timerEventDefinition</code><code class="html plain">&gt;</code></div></div></td></tr></tbody></table></div></div>
+</div>
+<p>其中endDate是可选的配置，上面使用了两张方式加上了endDate,　定时器将会在指定的时间停止工作。</p>
+<p>此外如果你使用Cron 表达式，可以这样写：</p>
+<div class="cnblogs_code">
+<pre>0 0/5 * * * ?</pre>
+</div>
+<p><span class="bold"><strong>注意：</strong> 第一个数字表示秒，而不是像通常Unix cron中那样表示分钟。</span><span class="bold">重复的时间周期能更好的处理相对时间，它可以计算一些特定的时间点 (比如用户任务的开始时间)，而cron表达式可以处理绝对时间, 这对定时启动事件特别有用。</span></p>
+<p><span class="bold">你可以使用表达式进行配置，在里面动态设置值，不过该值需要为ISO 8601或者(cron表达式)格式，</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">boundaryEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="escalationTimer"</span><span style="color: #ff0000;"> cancelActivity</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> attachedToRef</span><span style="color: #0000ff;">="firstLineSupport"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">timeDuration</span><span style="color: #0000ff;">&gt;</span>${duration}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timeDuration</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">timerEventDefinition</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">boundaryEvent</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>定义器的执行有先决条件：async executor和job被启用定时器才会激活(例如在activiti.cfg.xml中配置了<em>jobExecutorActivate</em>或者<em><em>asyncExecutorActivate</em></em>为true)。</p>
+<h4>8.1.2 错误事件定时器</h4>
+<p>BPMN的错误是关于业务上面的异常处理，它和java代码上的异常是不同的，两者完全不同，比如这样配置一个错误事件：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">endEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="myErrorEndEvent"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">errorEventDefinition </span><span style="color: #ff0000;">errorRef</span><span style="color: #0000ff;">="myError"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">3</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">endEvent</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h4>&nbsp;8.1.3 信号事件</h4>
+<p>信号事件会引用一个命名的信号，所谓的信号作用在整个流程引擎全局范围内，会发送给所有活跃的处理器。信号事件在BPMN文件中是定义在signalEventDefinition中，其中的signalRef属性可以引用前面声明的signal，而signal在definitions的根节点中作为子元素，下面就是一个例子</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">definitions</span><span style="color: #ff0000;">... </span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #008000;">&lt;!-- 声明</span><span style="color: #008000;">signal </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">signal </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="alertSignal"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="alert"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">process </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="catchSignal"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">intermediateThrowEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="throwSignalEvent"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="Alert"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>             <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> signal event definition </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 8</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">signalEventDefinition </span><span style="color: #ff0000;">signalRef</span><span style="color: #0000ff;">="alertSignal"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">intermediateThrowEvent</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span> <span style="color: #000000;">        ...
+</span><span style="color: #008080;">11</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">intermediateCatchEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="catchSignalEvent"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="On Alert"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span>             <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> signal event definition </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">13</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">signalEventDefinition </span><span style="color: #ff0000;">signalRef</span><span style="color: #0000ff;">="alertSignal"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">14</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">intermediateCatchEvent</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span> <span style="color: #000000;">        ...
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">process</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">definitions</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>Throwing信号事件：在BPMN中配置或者用代码实现都可以发出信号，而使用代码可以这样子：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #000000;">RuntimeService.signalEventReceived(String signalName);
+</span><span style="color: #008080;">2</span> RuntimeService.signalEventReceived(String signalName, String executionId);</pre>
+</div>
+<p>这两个方法不同之处在于第一个方法发出全局的信号，第二个方法会指定execution发出信号。</p>
+<p>Catching信号事件:被中间事件和边界事件捕获的事件。</p>
+<p>前面第二个方法的executionId或者查询当前活跃的信号事件方法如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> List<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Execution</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> executions = runtimeService.createExecutionQuery()
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">      .signalEventSubscriptionName("alert")
+</span><span style="color: #008080;">3</span>       .list();</pre>
+</div>
+<p>信号的作用范围：</p>
+<p>&nbsp;默认的信号作用域是整个流程引擎，也就是说你可以throw一个信号在多个流程实例之间并发生作用。有时候我们需要作用范围仅仅是在发生事件的流程实例里，限制信号的作用范围，可以这样配置，不过它并不是BPMN2.0规范中的，是activiti独有的，其中activiti:scope的默认值是global。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">signal </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="alertSignal"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="alert"</span><span style="color: #ff0000;"> activiti:scope</span><span style="color: #0000ff;">="processInstance"</span><span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>信号事件案例：这里我使用了Activiti Explorer在线流程图设计器设计了两张图，展示了信号交互。</p>
+<p>第一张流程是从保险规则变动开始的，然后相关人员审批，如果同意后会发出保险条件发生改变的信号。</p>
+<p><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/672697-20160824231559948-109304358.png" alt=""></p>
+<p>第二张流程中将在红框标识的地方会捕获(Catching)这个事件，使得保险合同在这时重新计算。</p>
+<p><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/672697-20160824232328964-1657699717.png" alt=""></p>
+<p>信号是通过广播传递给所有活跃的事件，但有时候我们并不是想要这种结果，譬如下图：</p>
+<p><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/672697-20160824234209417-1532050449.png" alt=""></p>
+<p>上面流程图的意思是执行“do something”任务时出现的错误，会被边界错误事件捕获， 然后使用信号传播给并发路径上的分支，进而中断"do something inparallel"任务，&nbsp;但是，根据信号的广播含义，它也会传播给所有其他订阅了信号事件的流程实例，这就是我们不想要的。这时我们需要调用前面介绍触发信号的API的第二个方法进行手动关联。</p>
+<h4>8.1.4 消息事件</h4>
+<p>消息事件会引用已命名的消息。和信号不同的是，消息具有名称和内容，并且消息始终指定了单个的接收者。　</p>
+<p>消息事件定义在BPMN文件的messageEventDefinition元素中，其中messageRef属性值来自于message，至于message是配置在definitions的根元素里面。下面是一个例子：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">definitions </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="definitions"</span><span style="color: #ff0000;">
+  xmlns</span><span style="color: #0000ff;">="http://www.omg.org/spec/BPMN/20100524/MODEL"</span><span style="color: #ff0000;">
+  xmlns:activiti</span><span style="color: #0000ff;">="http://activiti.org/bpmn"</span><span style="color: #ff0000;">
+  targetNamespace</span><span style="color: #0000ff;">="Examples"</span><span style="color: #ff0000;">
+  xmlns:tns</span><span style="color: #0000ff;">="Examples"</span><span style="color: #0000ff;">&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">message </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="newInvoice"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="newInvoiceMessage"</span> <span style="color: #0000ff;">/&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">message </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="payment"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="paymentMessage"</span> <span style="color: #0000ff;">/&gt;</span>
+
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">process </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="invoiceProcess"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">startEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="messageStart"</span> <span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">messageEventDefinition </span><span style="color: #ff0000;">messageRef</span><span style="color: #0000ff;">="newInvoice"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">startEvent</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    ...
+    </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">intermediateCatchEvent </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="paymentEvt"</span> <span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">messageEventDefinition </span><span style="color: #ff0000;">messageRef</span><span style="color: #0000ff;">="payment"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">intermediateCatchEvent</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    ...
+  </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">process</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">definitions</span><span style="color: #0000ff;">&gt;</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;抛出消息事件：Activiti作为嵌入式的引擎，它不会关注怎么接收消息，接收消息取决于你的环境和特定的平台，比如你可以连接到JMS消息队列或者执行WebService或REST请求，这是需要你的应用层架构中进行实现，Activiti只是其中一部分。</p>
+<p>在你的应用里面收到消息，你需要处理它，如果是启动流程实例的消息，可以参考下面的API:</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #000000;">ProcessInstance startProcessInstanceByMessage(String messageName);
+</span><span style="color: #008080;">2</span> ProcessInstance startProcessInstanceByMessage(String messageName, Map<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">String</span><span style="color: #ff0000;">, Object</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> processVariables);
+</span><span style="color: #008080;">3</span> ProcessInstance startProcessInstanceByMessage(String messageName, String businessKey, Map<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">String</span><span style="color: #ff0000;">, Object</span><span style="color: #0000ff;">&gt;</span> processVariables);</pre>
+</div>
+<p>这些API允许使用引用的消息进行启动流程实例。如果流程实例需要接收这些消息，首先你需要关联指定流程实例和消息，然后触发处于等待的流程，使用RunTimeService可以触发基于消息的流程。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #000000;">void messageEventReceived(String messageName, String executionId);
+</span><span style="color: #008080;">2</span> void messageEventReceived(String messageName, String executionId, HashMap<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">String</span><span style="color: #ff0000;">, Object</span><span style="color: #0000ff;">&gt;</span> processVariables);</pre>
+</div>
+<p>查询订阅消息事件的流程定义：</p>
+<p>对于start event的消息，消息事件关联到指定的流程定义，消息的订阅可以使用ProcessDefinitionQuery查询。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #000000;">ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">      .messageEventSubscription("newCallCenterBooking")
+</span><span style="color: #008080;">3</span>       .singleResult();</pre>
+</div>
+<p>对于明确的消息是对应一个流程的，所以查询结果一般是0个或者1个，如果是流程定义更新，那么方法返回最新的流程定义。</p>
+<p>如果是中间消息事件，订阅的消息关联到特定的流程，我们可以使用<strong>ExecutionQuery</strong>进行查询：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #000000;">Execution execution = runtimeService.createExecutionQuery()
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">      .messageEventSubscriptionName("paymentReceived")
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">      .variableValueEquals("orderId", message.getOrderId())
+</span><span style="color: #008080;">4</span>       .singleResult();</pre>
+</div>
+<p>下面的实例通过两个不同的消息进行启动流程实例：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/672697-20160825162144757-256800384.png" alt=""></p>
+<p>&nbsp;在某些需要多个start event启动流程实例需要统一的处理方式的时候是有用处的。</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/liujie037/category/689421.html" target="_blank">javaweb学习笔记</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/liujie037/tag/java/">java</a>, <a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>, <a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5799905,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" href="javascript:void(0);">已关注</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/" target="_blank"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/liujie037/">liujie037</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followees">关注 - 2</a><br>
+            <a href="http://home.cnblogs.com/u/liujie037/followers">粉丝 - 9</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                我在关注他 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;);return false;">取消关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5799905,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">1</span>
+    </div>
+    <div class="buryit" onclick="votePost(5799905,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/liujie037/p/5796243.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/liujie037/p/5796243.html" title="发布于2016-08-22 23:50">Activiti工作流学习-----基于5.19.0版本(6)</a><br><a href="http://www.cnblogs.com/liujie037/p/5807521.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/liujie037/p/5807521.html" title="发布于2016-09-11 21:47">Activiti工作流学习-----基于5.19.0版本(8)</a><br></div>
+</div>
+
+
+		</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2016-08-25 16:37</span> <a href="http://www.cnblogs.com/liujie037/">liujie037</a> 阅读(<span id="post_view_count">3291</span>) 评论(<span id="post_comment_count">1</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5799905" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/liujie037/p/5799905.html#" onclick="AddToWz(5799905);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=198104,cb_entryId=5799905,cb_blogApp=currentBlogApp,cb_blogUserGuid='da0d9364-ae3c-e411-b908-9dcfd8948a71',cb_entryCreatedDate='2016/8/25 16:37:00';loadViewCount(cb_entryId);var cb_postType=1;</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<a name="评论"></a>
+<div id="comments">
+<h3>评论</h3>
+	
+	
+			<div class="post">
+				<h2>
+					<a href="http://www.cnblogs.com/liujie037/p/5799905.html#3496776" class="layer">#1楼</a><a name="3496776" id="comment_anchor_3496776"></a><span id="comment-maxId" style="display:none;">3496776</span><span id="comment-maxDate" style="display:none;">2016/8/25 19:03:35</span>
+					&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(3496776,&#39;AtdFkHl2gFxohPHDEcbX2O7ZnvWl/yVAGq+O0gP31Qbh+GOHEafoRg==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(3496776,&#39;AtdFkHl2gFxohPHDEcbX2O7ZnvWl/yVAGq+O0gP31Qbh+GOHEafoRg==&#39;)">引用</a></span>
+				</h2>
+				<div id="comment_body_3496776" class="blog_comment_body">mark。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3496776,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3496776,&#39;Bury&#39;,this)">反对(0)</a></div>
+				<div class="postfoot">
+					 <span class="comment_date">2016-08-25 19:03</span> | <a id="a_comment_author_3496776" href="http://www.cnblogs.com/muki/" target="_blank">muki</a> <a href="http://msg.cnblogs.com/send/muki" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+				</div>
+			</div>
+		
+</div>
+<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/liujie037/p/5799905.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/liujie037/p/5799905.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="射禾木">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】超50万VC++源码: 大型工控、组态\仿真、建模CAD源码2018！</a><br><a href="https://cloud.tencent.com/developer/support-plan?fromSource=gwzcw.710852.710852.710852" target="_blank">【推荐】加入腾讯云自媒体扶持计划，免费领取域名&amp;服务器</a><br><a href="https://group.cnblogs.com/topic/78343.html" target="_blank">【福利】限时领取，H3 BPM给你发年终奖</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.h3bpm.net/" target="_blank"><img width="300" height="250" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/24442-20171226125601900-422637433.jpg" alt="h3bpm 活动"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="https://news.cnblogs.com/n/586625/" target="_blank">英媒：腾讯有意向缅甸社交网站MySquar投资</a><br> ·  <a href="https://news.cnblogs.com/n/586628/" target="_blank">构筑“掩体” 携程推动同程艺龙合并</a><br> ·  <a href="https://news.cnblogs.com/n/586624/" target="_blank">ofo“撕开”出海突破口：中国企业全球化新样本</a><br> ·  <a href="https://news.cnblogs.com/n/586626/" target="_blank">空降兵连续离职，战略再次动荡，迷茫的联想移动何时能找到方向？</a><br> ·  <a href="https://news.cnblogs.com/n/586629/" target="_blank">Intel/AMD合体CPU性能曝光：图形比GTX 1060快13%</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/34770/" target="_blank"><img width="468" height="60" src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/24442-20171208101900738-116140477.jpg" alt="阿里云C2-1208"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/585502/" target="_blank">步入云计算</a><br> ·  <a href="http://kb.cnblogs.com/page/531409/" target="_blank">以操作系统的角度述说线程与进程</a><br> ·  <a href="http://kb.cnblogs.com/page/141729/" target="_blank">软件测试转型之路</a><br> ·  <a href="http://kb.cnblogs.com/page/177402/" target="_blank">门内门外看招聘</a><br> ·  <a href="http://kb.cnblogs.com/page/112506/" target="_blank">大道至简，职场上做人做事做管理</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+<li>
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+<li>
+<a id="blog_nav_myhome" class="two_words" href="http://www.cnblogs.com/liujie037/">首页</a></li>
+<li>
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li>
+<a id="blog_nav_contact" accesskey="9" class="two_words" rel="nofollow" href="https://msg.cnblogs.com/send/liujie037">联系</a></li>
+<li>
+<a id="blog_nav_rss" class="two_words" href="http://www.cnblogs.com/liujie037/rss">订阅</a>
+<a id="blog_nav_rss_image" href="http://www.cnblogs.com/liujie037/rss"><img src="./Activiti工作流学习-----基于5.19.0版本(7) - liujie037 - 博客园_files/xml.gif" alt="订阅"></a>
+</li>
+<li>
+<a id="blog_nav_admin" class="two_words" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/12/01&#39;);return false;">&lt;</a></td><td align="center">2018年1月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2018/02/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td class="CalWeekendDay" align="center">6</td></tr><tr><td class="CalTodayDay" align="center">7</td><td align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td class="CalWeekendDay" align="center">13</td></tr><tr><td class="CalWeekendDay" align="center">14</td><td align="center">15</td><td align="center">16</td><td align="center">17</td><td align="center">18</td><td align="center">19</td><td class="CalWeekendDay" align="center">20</td></tr><tr><td class="CalWeekendDay" align="center">21</td><td align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td class="CalWeekendDay" align="center">27</td></tr><tr><td class="CalWeekendDay" align="center">28</td><td align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td></tr><tr><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td><td class="CalOtherMonthDay" align="center">9</td><td class="CalOtherMonthDay" align="center">10</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+<meta name="vs_showGrid" content="False">
+
+<h3>公告</h3>
+<div id="blog-news"><div id="profile_block">昵称：<a href="https://home.cnblogs.com/u/liujie037/">liujie037</a><br>园龄：<a href="https://home.cnblogs.com/u/liujie037/" title="入园时间：2014-09-15">3年3个月</a><br>粉丝：<a href="https://home.cnblogs.com/u/liujie037/followers/">9</a><br>关注：<a href="https://home.cnblogs.com/u/liujie037/followees/">2</a><div id="p_b_follow">已关注 <a href="javascript:void(0);" onclick="unfollow(&#39;da0d9364-ae3c-e411-b908-9dcfd8948a71&#39;)">-取消</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+
+<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/liujie037/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/liujie037/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/liujie037/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/liujie037/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<h3 class="catListTitle">我的标签</h3>
+<div id="MyTag">
+<ul>
+<li><a href="http://www.cnblogs.com/liujie037/tag/java/">java</a>(10)</li><li><a href="http://www.cnblogs.com/liujie037/tag/bpmn/">bpmn</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/activiti/">activiti</a>(8)</li><li><a href="http://www.cnblogs.com/liujie037/tag/JasperReport%20%20iReport%20%20%20PDF%20%20%20jasper%20%20jrxml/">JasperReport  iReport   PDF   jasper  jrxml</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/%E8%BF%90%E7%AE%97%E7%AC%A6/">运算符</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/mysql/">mysql</a>(2)</li><li><a href="http://www.cnblogs.com/liujie037/tag/pdf/">pdf</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/POI/">POI</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/python%E7%9A%84%E4%BB%8B%E7%BB%8D/">python的介绍</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/Servlet/">Servlet</a>(1)</li><li><a href="http://www.cnblogs.com/liujie037/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/liujie037/category/689411.html">c语言学习笔记(17)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/liujie037/category/791015.html">javaWeb服务器笔记(1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/liujie037/category/689421.html">javaweb学习笔记(8)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/liujie037/category/689420.html">java基础学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/liujie037/category/689422.html">SSH学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/liujie037/category/689423.html">数据库学习笔记</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/liujie037/category/739422.html">图表学习笔记(5)</a></li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/liujie037/archive/2016/09.html">2016年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/liujie037/archive/2016/08.html">2016年8月 (7)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/liujie037/archive/2016/06.html">2016年6月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/liujie037/archive/2016/02.html">2016年2月 (5)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/liujie037/archive/2015/09.html">2015年9月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/liujie037/archive/2015/05.html">2015年5月 (19)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/liujie037/archive/2015/03.html">2015年3月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/liujie037/archive/2014/11.html">2014年11月 (3)</a></li>
+			
+				<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/liujie037/archive/2014/09.html">2014年9月 (2)</a></li>
+			
+				</ul>
+			
+	
+		<h3>文章分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_2_Link_0" href="http://www.cnblogs.com/liujie037/category/627940.html">XML学习笔记</a></li>
+			
+				</ul>
+			
+	</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/5799905.html#3496776">1. Re:Activiti工作流学习-----基于5.19.0版本(7)</a></li>
+        <li class="recent_comment_body">mark。</li>
+        <li class="recent_comment_author">--muki</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/liujie037/p/4496910.html#3221683">2. Re:第一个C语言程序</a></li>
+        <li class="recent_comment_body">像早上的味道。</li>
+        <li class="recent_comment_author">--_Zhuqy</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">1. Activiti工作流学习-----基于5.19.0版本(7)(3291)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/4842512.html">2. 使用POI插件，提取导出excel的工具类(3208)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5790698.html">3. Activiti工作流学习-----基于5.19.0版本(4)(2909)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5176486.html">4. 利用程序将.jrxml导出为.jasper文件并用PDF显示(2)(2030)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5778514.html">5. Activiti工作流学习-----基于5.19.0版本(2)(1733)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/4496910.html">1. 第一个C语言程序(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">2. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/liujie037/p/3976373.html">1. 用IO流拷贝歌曲(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5807521.html">2. Activiti工作流学习-----基于5.19.0版本(8)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5799905.html">3. Activiti工作流学习-----基于5.19.0版本(7)(1)</a></li><li><a href="http://www.cnblogs.com/liujie037/p/5792658.html">4. Activiti工作流学习-----基于5.19.0版本(5)(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © liujie037
+</p>
+</div>
+</div>
+
+
+
+<div style="position: static; display: none; width: 0px; height: 0px; border: none; padding: 0px; margin: 0px;"><div id="trans-tooltip"><div id="tip-left-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-top.png&quot;);"></div><div id="tip-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-top.png&quot;) repeat-x;"></div><div id="tip-right-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-top.png&quot;);"></div><div id="tip-right" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right.png&quot;) repeat-y;"></div><div id="tip-right-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-right-bottom.png&quot;);"></div><div id="tip-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-bottom.png&quot;) repeat-x;"></div><div id="tip-left-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left-bottom.png&quot;);"></div><div id="tip-left" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-left.png&quot;);"></div><div id="trans-content"></div></div><div id="tip-arrow-bottom" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-bottom.png&quot;);"></div><div id="tip-arrow-top" style="background: url(&quot;chrome-extension://ikkepelhgbcgmhhmcmpfkjmchccjblkd/imgs/map/tip-arrow-top.png&quot;);"></div></div></body></html>

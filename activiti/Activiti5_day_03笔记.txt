@@ -1,0 +1,225 @@
+Activiti5:工作流
+1. RepositoryService仓储服务：
+   -- act_ge_bytearray
+   -- act_re_deployment
+   -- act_re_procdef
+   -- act_ge_property
+
+   完成的功能：
+   -- 流程部署
+   -- 流程部署查询
+   -- 删除流程部署
+   -- 流程定义查询
+   -- 查询流程定义资源文件(BpmnModel)
+   -- 查询流程定义资源图片(InputStream)
+
+2. RuntimeService运行时服务:
+   -- act_ru_execution
+   -- act_ru_event_subscr
+   -- act_ru_job
+   -- act_ru_task
+   -- act_ru_variable
+
+   完成的功能：
+   -- 开启流程实例.
+   -- 查询流程实例.
+   -- 删除流程实例.
+   -- 触发走一步.signal
+   -- 获取当前活动的节点.
+
+3. TaskService任务服务:
+   -- act_ru_task
+   完成的功能:
+   -- 查询任务.
+   -- 完成任务.
+  
+4. HistoryService历史服务:
+   -- act_hi_procinst
+   -- act_hi_taskinst
+
+   完成的功能：
+   -- 查询历史流程实例
+   -- 查询历史任务实例
+
+
+一、BPMN2.0构成元素(六大部分)
+
+    bpmn文件中的基础元素：
+    -- <process id="流程定义id" name="流程定义名称"/>： 定义流程的根元素.
+
+    1. Events事件
+       a. Start Event开始事件
+          -- StartEvent正常开始事件
+	     <startEvent id="startevent1" name="Start" activiti:initiator="login">
+	      <extensionElements>
+		<activiti:formProperty id="id" name="id" type="string" default="1" required="true"></activiti:formProperty>
+		<activiti:formProperty id="name" name="name" type="string" default="admin" required="true"></activiti:formProperty>
+	      </extensionElements>
+	    </startEvent>
+	    activiti:initiator (发起人).
+
+	  -- TimerStartEvent定时开始事件
+	       setJobExecutorActivate(true); // 设置激活任务调度
+                <startEvent id="timerstartevent1" name="Timer start">
+		      <timerEventDefinition>
+			 <!-- 设置间隔的时间 -->
+			<timeDuration>PT10S</timeDuration>
+			 <!-- 设置具体的时间 -->
+			<timeDate>2016-01-23T17:04:00</timeDate>
+			<!-- 设置在指定的时间启动4次流程实例 -->
+			<timeCycle>R4/2016-01-23T17:07:00/PT10S</timeCycle>
+		      </timerEventDefinition>
+	        </startEvent>
+
+	  -- MessageStartEvent消息开始事件
+	     a. 定义全局的消息：
+	        <message id="myMsg" name="myMsg2"></message>
+
+		<startEvent id="messagestartevent1" name="Message start">
+			<messageEventDefinition messageRef="myMsg"></messageEventDefinition>
+		</startEvent>
+	     
+	  -- SignalStartEvent信号开始事件
+	     a. 定义全局的信号:
+	        <signal id="mySignal" name="mySignal" activiti:scope="global"></signal>
+
+	       <startEvent id="signalstartevent1" name="Signal start">
+	         <signalEventDefinition signalRef="mySignal"></signalEventDefinition>
+	       </startEvent>
+
+       b. End Event结束事件
+
+       c. Boundary Event边界事件
+
+       d. Intermediate Event中间捕获事件
+
+    2. Tasks任务:
+       -- UserTask: 用户任务(人机交互).
+       <userTask id="usertask1" name="订单审核">
+           
+       </userTask>
+       属性：id (唯一的标识符)
+             name (节点的名称)
+	     activiti:assignee 指定任务处理人
+	     activiti:candidateUsers="test1,test2,test3" : 指定候选人.(拉模式)
+             activiti:candidateGroups="role1" : 指定候选组.
+	     activiti:dueDate="PT10S" : 任务到期时间
+      子元素：
+         <documentation>写任务描述信息</documentation>
+	 <extensionElements> : 扩展的元素 (放监听器或表单数据)
+	 <multiInstanceLoopCharacteristics> : 多实例.
+
+
+      任务监听器：
+      -- 开发任务监听器必须实现TaskListener接口.
+      -- 指定表达式: #{流程变量名.方法(实参列表)}
+        <activiti:taskListener event="assignment" class="cn.itcast.actviti.listener.AssignmentTaskListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="cn.itcast.actviti.listener.CompleteTaskListener"></activiti:taskListener>
+        <activiti:taskListener event="create" expression="#{u.test1(100,'中国')}"></activiti:taskListener>
+     
+      执行监听器:
+      -- 开发执行监听器必须实现ExecutionListener接口. 
+        <activiti:executionListener event="start|end" class="cn.itcast.actviti.listener.EndListener"></activiti:executionListener>
+      
+      表单数据：
+        <activiti:formProperty id="id" name="id" type="string" default="1" required="true"></activiti:formProperty>
+        <activiti:formProperty id="name" name="name" type="string" variable="name" required="true"></activiti:formProperty>
+        <activiti:formProperty id="sex" name="sex" type="boolean" expression="${sex == 1}" required="true"></activiti:formProperty>
+        获取表单数据：
+	FormService表单服务对象.
+	 
+	  核心代码：
+	  FormService fs = task.getExecution().getEngineServices().getFormService();
+	  // 获取任务中的表单数据
+	  List<FormProperty> lists = fs.getTaskFormData(task.getId()).getFormProperties();
+	  for (FormProperty fp : lists){
+		System.out.println(fp.getId() + "==" + fp.getName() + "==" + fp.getValue());
+	  }
+
+     多实例：
+     <multiInstanceLoopCharacteristics isSequential="false"
+	activiti:collection="userLists" activiti:elementVariable="admin">
+        <!-- 循环总次数 -->
+	<loopCardinality>5</loopCardinality>
+	<!-- 完成任务条件 -->
+        <completionCondition>${nrOfCompletedInstances / nrOfInstances &gt;= 0.6 }</completionCondition>
+      </multiInstanceLoopCharacteristics>
+
+
+    -- ScriptTask脚本任务(自动触发)
+       写javascript代码来完成一些计算.
+        <scriptTask id="scripttask1" name="脚本任务" 
+		scriptFormat="javascript" activiti:autoStoreVariables="false">
+        <script>
+		var sum = 0;
+		for (var i = 0; i &lt;= 100; i++){
+			sum += i;
+		}
+		execution.setVariable("sum", sum);
+	</script>
+
+
+    -- ServiceTask服务任务(自动触发)
+       配置java类进行后台任务处理.
+       -- 任务服务类必须实现JavaDelegate接口.
+        <serviceTask id="servicetask1" name="服务任务" activiti:class="cn.itcast.actviti.listener.ServiceTaskDelegate">
+	      <extensionElements>
+		<activiti:field name="name">
+		  <activiti:string><![CDATA[lee]]></activiti:string>
+		</activiti:field>
+	      </extensionElements>
+      </serviceTask>
+
+    -- ManualTask手工任务(自动触发).
+       <manualTask id="manualtask1" name="手工任务"></manualTask>
+       
+    -- ReceiveTask接收任务(信号触发).
+       <receiveTask id="receivetask1" name="接收任务"></receiveTask>
+
+    -- MailTask邮件任务
+       主要作用是用来发邮件.
+
+       a. 依赖jar: (mail.jar、activation.jar、common-mail.xx.jar)
+       b. 调用ProcessEngineConfiguration配置信息对象进行邮件属性的设置.
+          .setMailServerDefaultFrom("fkjava8888@163.com") // 设置发送人
+	  .setMailServerHost("smtp.163.com") // 设置邮件服务器 
+	  .setMailServerUsername("fkjava8888") // 设置用户名
+	  .setMailServerPassword("fkjava888"); // 设置密码
+
+      <serviceTask id="mailtask1" name="发送邮件" activiti:type="mail">
+	      <extensionElements>
+		<activiti:field name="to">
+		  <activiti:expression><![CDATA[${to}]]></activiti:expression>
+		</activiti:field>
+		<activiti:field name="from">
+		  <activiti:expression><![CDATA[${from}]]></activiti:expression>
+		</activiti:field>
+		<activiti:field name="subject">
+		  <activiti:expression><![CDATA[${subject}]]></activiti:expression>
+		</activiti:field>
+		<activiti:field name="cc">
+		  <activiti:expression><![CDATA[${to}]]></activiti:expression>
+		</activiti:field>
+		<activiti:field name="bcc">
+		  <activiti:expression><![CDATA[${to}]]></activiti:expression>
+		</activiti:field>
+		<activiti:field name="charset">
+		  <activiti:string><![CDATA[utf-8]]></activiti:string>
+		</activiti:field>
+		<activiti:field name="html">
+		  <activiti:expression><![CDATA[${to},你的订单已审核！]]></activiti:expression>
+		</activiti:field>
+	      </extensionElements>
+    </serviceTask>
+
+    3. Gateways网关:
+       -- ParallelGateway并行网关(多人必须同时审批)
+    
+
+流程变量: 流程中需要用到变量.
+ ${变量名}
+  
+
+
+
+

@@ -1,0 +1,137 @@
+Activiti5: 工作流
+ 流程：指完成某件事情需要的过程.
+ 流程定义：具体的流程.把具体流程定义在bpmn文件中.
+ 流程部署：把流程定义文件保存到数据库.
+
+Activiti5的安装：
+1.安装流程设计器.bpmn.
+2.安装数据库表.(24张表)
+
+一、流程部署.
+    RepositoryService仓储服务
+    -- addInputStream("流程定义文件对应的输入流")
+    -- deploy();
+
+
+二、流程部署管理.
+    -- 查看流程部署.
+       a. DeploymentQuery dq = repositoryService.createDeploymentQuery();
+       b. List<Deployment> lists = dq.list();
+
+    -- 删除流程部署.
+       repositoryService.deleteDeployment("部署id", true);
+
+三、流程定义管理.
+    -- 查看流程定义.
+       a. ProcessDefinitionQuery pq = repositoryService.createProcessDefinitionQuery();
+       b. List<ProcessDefinition> lists = pq.list();
+
+    -- 开启流程实例.
+       a. runtimeService.startProcessInstanceById("流程定义id");
+       b. runtimeService.startProcessInstanceByKey("流程定义key");
+
+四、根据流程定义id查看它对应的所有的流程实例.
+    操作步骤：
+    1. 创建RuntimeService对象.
+    2. 获取流程实例查询对象.
+       ProcessInstanceQuery piq = RuntimeService.createProcessInstanceQuery();
+    3. 调用流程实例查询对象完成所有的查询.
+
+    
+五、查看流程图.
+    a. 用到RepositoryService
+       /** 获取流程定义资源图片 */
+       repositoryService.getProcessDiagram(pi.getProcessDefinitionId());
+
+       /** 获取流程定义文件对应的对象 */
+       BpmnModel bpmnModel = repositoryService.getBpmnModel(pi.getProcessDefinitionId());
+
+    b. 用到RuntimeService
+       /** 获取当前所有的活动节点的id */
+       List<String> activityIds = runtimeService.getActiveActivityIds(piId);
+
+六、删除流程实例.
+    /** 根据流程实例ID删除指定流程实例 */
+    runtimeService.deleteProcessInstance("流程实例ID", "删除的原因");
+
+七、让流程实例走一步.
+    /** 根据流程实例ID发信号让它走一步 */
+    runtimeService.signal(piId);
+
+八、BPMN2.0构成元素(六大部分)
+
+    bpmn文件中的基础元素：
+    -- <process id="流程定义id" name="流程定义名称"/>： 定义流程的根元素.
+
+
+    1. Events事件
+       a. Start Event开始事件
+
+       b. End Event结束事件
+
+       c. Boundary Event边界事件
+
+       d. Intermediate Event中间捕获事件
+
+    2. Tasks任务:
+       -- UserTask: 用户任务(人机交互).
+       <userTask id="usertask1" name="订单审核"></userTask>
+       属性：id (唯一的标识符)
+             name (节点的名称)
+
+	     activiti:assignee 指定任务处理人
+	     activiti:candidateUsers="test1,test2,test3" : 指定候选人.(拉模式)
+
+	     
+       
+    3. Gateways网关:
+       -- ParallelGateway并行网关(多人必须同时审批)
+   
+
+九、根据任处理人查询任务：
+    TaskService : 任务服务对象.
+
+    // 创建任务查询对象
+    TaskQuery tq = taskService.createTaskQuery();
+		
+    // 根据任务处理人来查询
+    List<Task> taskLists = tq.taskAssignee(userId).list();
+
+十、用户完成任务：
+    taskService.complete(String taskId);
+
+十一、根据流程实例要看当前所有的任务
+    // 创建任务查询对象
+    TaskQuery tq = taskService.createTaskQuery();
+    // 根据任务处理人来查询
+    List<Task> taskLists = tq.processInstanceId(piId).list();
+
+十二、查看历史流程实例
+    HistoryService历史服务
+
+   /** 创建历史流程实例查询对象 */
+   HistoricProcessInstanceQuery hpiq = historyService.createHistoricProcessInstanceQuery();
+		
+   /** 查询所有的历史流程实例 */
+   List<HistoricProcessInstance> hpiLists = hpiq
+		   .orderByProcessInstanceId() // 添加排序字段
+		   .asc() // 升序
+		   .list(); // 获取结果
+
+十三、根据历史流程实例查看任务
+   HistoryService历史服务
+   
+   /** 创建历史任务实例查询对象 */
+   HistoricTaskInstanceQuery htiq = historyService.createHistoricTaskInstanceQuery();
+   /** 根据历史流程实例id查询 */
+   List<HistoricTaskInstance> htiLists = htiq.processInstanceId(hpiId).orderByHistoricTaskInstanceEndTime().asc().list();
+
+
+
+
+
+    
+    
+     
+
+
